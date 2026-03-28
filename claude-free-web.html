@@ -360,8 +360,7 @@
       .hero-badge { letter-spacing: 3px; }
       .cd-colon { font-size: 2.8rem; }
       .invite-box { padding: 1.6rem 1.5rem; }
-      .travel-grid { gap: 1rem; }
-      .travel-card { flex: 0 0 calc(50% - 0.5rem); min-width: unset; max-width: unset; }
+      .travel-card { min-width: 130px; }
     }
 
     @media (max-width: 500px) {
@@ -810,39 +809,54 @@ function launchConfetti() {
   cv.style.display = 'block'; cv.style.opacity = '1';
 
   const COLORS = ['#C9963B','#E8C96C','#8B0000','#DC143C','#FFD700','#fff','#FF85A2'];
-  const pts = Array.from({ length: 130 }, () => ({
+  // velocities in px/ms so speed is frame-rate independent
+  const pts = Array.from({ length: 220 }, () => ({
     x: Math.random() * cv.width,
-    y: Math.random() * cv.height - cv.height,
-    w: 6 + Math.random() * 9, h: 3 + Math.random() * 5,
+    y: -(Math.random() * cv.height * 0.5),   // all start above viewport
+    w: 7 + Math.random() * 10, h: 4 + Math.random() * 6,
     color: COLORS[Math.floor(Math.random() * COLORS.length)],
-    vx: Math.random() * 2.5 - 1.2, vy: 2 + Math.random() * 3,
-    ang: Math.random() * 360, spin: Math.random() * 5 - 2.5
+    vx: (Math.random() * 3 - 1.5) * 0.1,    // px/ms
+    vy: (2.5 + Math.random() * 3.5) * 0.1,  // px/ms — guaranteed fast fall
+    ang: Math.random() * 360, spin: (Math.random() * 6 - 3) * 0.1
   }));
 
-  const t0 = Date.now(); let raf;
-  function draw() {
-    const elapsed = Date.now() - t0;
-    if (elapsed > 5500) {
+  const DURATION = 8000;
+  let t0 = null; let raf;
+
+  function draw(ts) {
+    if (!t0) t0 = ts;
+    const elapsed = ts - t0;
+
+    if (elapsed > DURATION) {
       cancelAnimationFrame(raf);
       cv.style.transition = 'opacity 0.8s'; cv.style.opacity = '0';
       setTimeout(() => { cv.style.display = 'none'; }, 900);
       return;
     }
+
+    // delta capped at 50ms to avoid huge jumps on tab-switch resume
+    const dt = Math.min(ts - (t0 + elapsed - (ts - t0 < 16 ? ts - t0 : 16)), 50);
+
     ctx.clearRect(0, 0, cv.width, cv.height);
     pts.forEach(p => {
       ctx.save();
       ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
       ctx.rotate(p.ang * Math.PI / 180);
-      ctx.globalAlpha = 0.88;
+      ctx.globalAlpha = 0.9;
       ctx.fillStyle = p.color;
       ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
       ctx.restore();
-      p.x += p.vx; p.y += p.vy; p.ang += p.spin;
-      if (p.y > cv.height) { p.y = -8; p.x = Math.random() * cv.width; }
+      p.x  += p.vx  * dt;
+      p.y  += p.vy  * dt;
+      p.ang += p.spin * dt;
+      if (p.y > cv.height + 10) {
+        p.y = -(Math.random() * 40 + 10);
+        p.x = Math.random() * cv.width;
+      }
     });
     raf = requestAnimationFrame(draw);
   }
-  draw();
+  raf = requestAnimationFrame(draw);
 }
 
 /* ───────────────────────────────
