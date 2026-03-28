@@ -168,9 +168,12 @@
     #date-reveal { background: #140303; text-align: center; }
     #date-reveal h2 { color: var(--gold-light); }
     #date-reveal .sub { color: rgba(201,150,59,0.55); }
-    .scratch-row { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+    .scratch-row { display: flex; justify-content: center; gap: clamp(0.5rem, 2.5vw, 2rem); flex-wrap: nowrap; }
     .scratch-wrap {
-      position: relative; width: 140px; height: 140px; border-radius: 50%;
+      position: relative;
+      width: clamp(80px, 26vw, 140px);
+      height: clamp(80px, 26vw, 140px);
+      border-radius: 50%;
       overflow: hidden; flex-shrink: 0;
       box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 0 4px rgba(201,150,59,0.2);
     }
@@ -188,7 +191,7 @@
       font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
       color: rgba(232,201,108,0.6); margin-top: 5px;
     }
-    .scratch-canvas { position: absolute; inset: 0; cursor: crosshair; touch-action: none; }
+    .scratch-canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
     .date-banner {
       margin-top: 3rem; opacity: 0; transform: translateY(25px);
       transition: all 0.9s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none;
@@ -351,17 +354,64 @@
     footer p { font-size: 0.72rem; letter-spacing: 3px; color: rgba(253,248,240,0.3); }
 
     /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      section { padding: 3.5rem 1.2rem; }
+      .sub { letter-spacing: 2px; font-size: 0.82rem; padding: 0 0.5rem; }
+      .hero-badge { letter-spacing: 3px; }
+      .cd-colon { font-size: 2.8rem; }
+      .invite-box { padding: 1.6rem 1.5rem; }
+      .travel-grid { gap: 1rem; }
+      .travel-card { flex: 0 0 calc(50% - 0.5rem); min-width: unset; max-width: unset; }
+    }
+
     @media (max-width: 500px) {
-      .scratch-wrap { width: 108px; height: 108px; }
-      .scratch-row { gap: 1.2rem; }
-      .div-amp, .vc { display: none; }
+      section { padding: 2.8rem 1rem; }
+
+      /* Hero */
+      .hero-badge { letter-spacing: 2px; font-size: 0.7rem; }
+      .couple-names { font-size: clamp(3rem, 15vw, 5rem); }
+      .couple-details { gap: 1.2rem; margin: 1.2rem 0; }
+      .div-amp { display: none; }
+      .invite-box { padding: 1.3rem 1rem; }
+      .invite-text { font-size: 1rem; }
+
+      /* Sub headings */
+      .sub { letter-spacing: 1px; font-size: 0.75rem; padding: 0 0.5rem; margin-bottom: 2rem; }
+
+      /* Scratch */
+      /* scratch sizing handled by clamp() above — no override needed */
+
+      /* Countdown */
+      .cd-num { font-size: clamp(2.2rem, 9vw, 3rem); }
+      .cd-colon { font-size: 2rem; line-height: 1.25; }
+      .cd-unit { min-width: 55px; }
+      .cd-lbl { letter-spacing: 3px; }
+
+      /* Venue */
+      .vc { display: none; }
+      .venue-card { padding: 2rem 1.2rem; }
+      .map-btn { padding: 0.9rem 1.4rem; font-size: 0.72rem; letter-spacing: 2px; }
+
+      /* Timeline */
       .timeline::before { left: 14px; }
       .tl-item { grid-template-columns: 28px 1fr; gap: 0.8rem; }
       .tl-dot { grid-column: 1; grid-row: 1; }
       .tl-card { grid-column: 2; }
       .tl-item:nth-child(even) .tl-card { grid-column: 2; text-align: left; }
       .tl-empty { display: none; }
-      .couple-names { font-size: clamp(3rem, 15vw, 5rem); }
+
+      /* Dress code */
+      .dress-row { gap: 2rem; }
+      .dress-note-main { font-size: 1rem; padding: 0 0.5rem; }
+
+      /* Travel */
+      /* Travel: exactly 2 per row */
+      .travel-grid { gap: 0.8rem; }
+      .travel-card { flex: 0 0 calc(50% - 0.4rem); min-width: unset; max-width: unset; padding: 1.2rem 0.8rem; }
+      .travel-info { font-size: 0.75rem; }
+
+      /* Gifts */
+      .gift-text { font-size: 1.05rem; padding: 0 0.3rem; }
     }
   </style>
 </head>
@@ -610,6 +660,9 @@
 <footer>
   <span class="fn">Nivetha &amp; Shiva</span>
   <p>25 May 2026 &nbsp;·&nbsp; With Love &amp; Joy</p>
+  <a href="https://buymeacoffee.com/narenkumar" target="_blank" rel="noopener" style="display:inline-block; margin-top:1.4rem; font-size:0.65rem; letter-spacing:2.5px; color:rgba(253,248,240,0.2); font-family:'Cormorant Garamond',serif; font-style:italic; text-decoration:none;">
+    Made with love by her brother &nbsp;✦
+  </a>
 </footer>
 
 <script>
@@ -656,34 +709,42 @@ const scratchDone = [false, false, false];
 function initScratch(i) {
   const canvas = document.getElementById('sc' + i);
   const revEl  = document.getElementById('rev' + i);
-  const ctx    = canvas.getContext('2d');
+
+  // Read the wrapper's CSS-computed size (reliable after load), set canvas buffer to match
+  const wrapper = canvas.parentElement;
+  const cssSize = Math.round(wrapper.getBoundingClientRect().width) || 140;
+  canvas.width  = cssSize;
+  canvas.height = cssSize;
+
+  const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   const cx = W / 2, cy = H / 2, r = W / 2;
 
   // Draw gold circle
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  const grd = ctx.createRadialGradient(cx - 20, cy - 20, 5, cx, cy, r);
+  const grd = ctx.createRadialGradient(cx - r * 0.14, cy - r * 0.14, r * 0.04, cx, cy, r);
   grd.addColorStop(0, '#F0C050');
   grd.addColorStop(0.5, '#C9963B');
   grd.addColorStop(1, '#9A7020');
   ctx.fillStyle = grd; ctx.fill();
 
   // Inner ring
-  ctx.beginPath(); ctx.arc(cx, cy, r - 9, 0, Math.PI * 2);
+  ctx.beginPath(); ctx.arc(cx, cy, r - Math.max(5, r * 0.09), 0, Math.PI * 2);
   ctx.strokeStyle = 'rgba(80,40,0,0.4)'; ctx.lineWidth = 1.5; ctx.stroke();
 
-  // Sparkle dots
+  // Sparkle dots — proportional to circle size
   ctx.fillStyle = 'rgba(255,220,100,0.7)';
   for (let k = 0; k < 7; k++) {
     const a = (k / 7) * Math.PI * 2;
     ctx.beginPath();
-    ctx.arc(cx + Math.cos(a) * 38, cy + Math.sin(a) * 38, 2.5, 0, Math.PI * 2);
+    ctx.arc(cx + Math.cos(a) * (r * 0.72), cy + Math.sin(a) * (r * 0.72), 2.5, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  // Label
+  // Label — font size proportional to circle
   ctx.fillStyle = '#4A2500';
-  ctx.font = 'bold 12px Lato, sans-serif';
+  const fontSize = Math.max(9, Math.round(W * 0.088));
+  ctx.font = `bold ${fontSize}px Lato, sans-serif`;
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText('✦ Scratch Me ✦', cx, cy);
 
@@ -727,7 +788,12 @@ function initScratch(i) {
   canvas.addEventListener('touchend',   () => drawing = false);
 }
 
-[0, 1, 2].forEach(initScratch);
+// Defer until after layout is fully computed so getBoundingClientRect returns CSS sizes
+if (document.readyState === 'complete') {
+  [0, 1, 2].forEach(initScratch);
+} else {
+  window.addEventListener('load', () => [0, 1, 2].forEach(initScratch));
+}
 
 function onAllRevealed() {
   document.getElementById('dateBanner').classList.add('show');
