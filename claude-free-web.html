@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Nivetha & Shiva — Wedding Invitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:        #8B0000;
+      --red-dark:   #4A0000;
+      --red-mid:    #6B0000;
+      --gold:       #C9963B;
+      --gold-light: #E8C96C;
+      --gold-pale:  #F5E6C8;
+      --cream:      #FDF8F0;
+      --white:      #FFFFFF;
+      --dark:       #1A0505;
+      --text:       #3A2020;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Lato', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+    /* ── CURTAIN ── */
+    .curtain-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; pointer-events: all;
+    }
+    .curtain-half {
+      width: 50%; height: 100%; position: relative;
+      animation-duration: 1.9s;
+      animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+      animation-delay: 1.0s;
+      animation-fill-mode: forwards;
+    }
+    .curtain-left {
+      background:
+        repeating-linear-gradient(to right,
+          rgba(0,0,0,0.28) 0, transparent 18px,
+          rgba(255,255,255,0.06) 36px, transparent 56px,
+          rgba(0,0,0,0.18) 72px, transparent 90px),
+        linear-gradient(165deg, #7A0000 0%, #8B0000 40%, #A01010 65%, #6B0000 100%);
+      animation-name: curtainLeft;
+    }
+    .curtain-right {
+      background:
+        repeating-linear-gradient(to left,
+          rgba(0,0,0,0.28) 0, transparent 18px,
+          rgba(255,255,255,0.06) 36px, transparent 56px,
+          rgba(0,0,0,0.18) 72px, transparent 90px),
+        linear-gradient(195deg, #7A0000 0%, #8B0000 40%, #A01010 65%, #6B0000 100%);
+      animation-name: curtainRight;
+    }
+    /* Gold inner-edge trim */
+    .curtain-left::after {
+      content: ''; position: absolute; right: 0; top: 0;
+      width: 9px; height: 100%;
+      background: linear-gradient(to right, var(--gold-light), var(--gold), var(--gold-light));
+      box-shadow: 3px 0 18px rgba(0,0,0,0.6);
+    }
+    .curtain-right::after {
+      content: ''; position: absolute; left: 0; top: 0;
+      width: 9px; height: 100%;
+      background: linear-gradient(to left, var(--gold-light), var(--gold), var(--gold-light));
+    }
+    /* Top valance swag */
+    .curtain-left::before, .curtain-right::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 55px;
+      background: linear-gradient(to bottom, #8C7025, var(--gold), #A07830);
+      z-index: 2;
+    }
+    @keyframes curtainLeft  { to { transform: translateX(-100%); } }
+    @keyframes curtainRight { to { transform: translateX( 100%); } }
+
+    /* ── CONFETTI CANVAS ── */
+    #confettiCanvas { position: fixed; inset: 0; z-index: 9998; pointer-events: none; display: none; }
+
+    /* ── SHARED SECTION STYLES ── */
+    section { padding: 5rem 1.5rem; position: relative; }
+    section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600; color: var(--red);
+      text-align: center; margin-bottom: 0.3rem; letter-spacing: 1px;
+    }
+    section h2 em { font-style: italic; font-weight: 300; }
+    .sub {
+      text-align: center; font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem; color: var(--gold); letter-spacing: 4px;
+      text-transform: uppercase; margin-bottom: 3rem;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(139,0,0,0.08) 0%, transparent 70%),
+        var(--cream);
+      padding: 4rem 1.5rem; overflow: hidden;
+    }
+    .petal {
+      position: absolute; width: 9px; height: 14px;
+      border-radius: 50% 10% 50% 10%;
+      opacity: 0; animation: floatPetal linear infinite;
+    }
+    @keyframes floatPetal {
+      0%   { transform: translateY(-30px) rotate(0deg)   scale(1);   opacity: 0; }
+      8%   { opacity: 0.45; }
+      90%  { opacity: 0.3; }
+      100% { transform: translateY(105vh) rotate(600deg) scale(0.7); opacity: 0; }
+    }
+    .hero-badge {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.8rem; letter-spacing: 7px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 2rem;
+    }
+    .couple-names {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3.8rem, 13vw, 7.5rem);
+      color: var(--red); line-height: 1.05;
+      text-shadow: 2px 4px 0 rgba(201,150,59,0.25), 0 8px 28px rgba(139,0,0,0.12);
+    }
+    .amp {
+      display: block; color: var(--gold);
+      font-size: 0.55em; line-height: 1.15;
+    }
+    .couple-details {
+      display: flex; gap: 2.5rem; justify-content: center;
+      align-items: center; flex-wrap: wrap; margin: 2rem 0;
+    }
+    .person .pname {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.2rem;
+      font-weight: 600; color: var(--red); letter-spacing: 1px;
+    }
+    .person .pcred {
+      font-size: 0.78rem; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--gold); margin-top: 3px;
+    }
+    .div-amp { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: var(--gold); opacity: 0.45; }
+    .invite-box {
+      border: 1px solid var(--gold); padding: 1.8rem 2.2rem;
+      position: relative; max-width: 490px; margin: 0 auto;
+      background: rgba(255,255,255,0.6);
+    }
+    .invite-box::before, .invite-box::after {
+      content: '✦'; position: absolute; color: var(--gold);
+      font-size: 1rem; background: var(--cream); padding: 0 7px;
+    }
+    .invite-box::before { top: -0.65rem; left: 50%; transform: translateX(-50%); }
+    .invite-box::after  { bottom: -0.65rem; left: 50%; transform: translateX(-50%); }
+    .invite-text {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.15rem; line-height: 1.85; color: var(--text); opacity: 0.82;
+    }
+    .scroll-hint {
+      margin-top: 3rem; display: flex; flex-direction: column; align-items: center;
+      gap: 8px; color: var(--gold); font-size: 0.7rem; letter-spacing: 4px;
+      text-transform: uppercase; animation: pulseHint 2s infinite;
+    }
+    .scroll-hint::after { content: ''; width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); }
+    @keyframes pulseHint { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+
+    /* ── DATE REVEAL ── */
+    #date-reveal { background: #140303; text-align: center; }
+    #date-reveal h2 { color: var(--gold-light); }
+    #date-reveal .sub { color: rgba(201,150,59,0.55); }
+    .scratch-row { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+    .scratch-wrap {
+      position: relative; width: 140px; height: 140px; border-radius: 50%;
+      overflow: hidden; flex-shrink: 0;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 0 4px rgba(201,150,59,0.2);
+    }
+    .reveal-text {
+      position: absolute; inset: 0; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #3A0505, #200202);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.55s ease;
+    }
+    .reveal-main {
+      font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600;
+      color: var(--gold-light); line-height: 1;
+    }
+    .reveal-tag {
+      font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(232,201,108,0.6); margin-top: 5px;
+    }
+    .scratch-canvas { position: absolute; inset: 0; cursor: crosshair; touch-action: none; }
+    .date-banner {
+      margin-top: 3rem; opacity: 0; transform: translateY(25px);
+      transition: all 0.9s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none;
+    }
+    .date-banner.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .date-banner h3 {
+      font-family: 'Great Vibes', cursive; font-size: clamp(2.8rem, 8vw, 4.5rem);
+      color: var(--gold-light); text-shadow: 0 0 40px rgba(232,201,108,0.4);
+    }
+    .date-banner p {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      color: rgba(232,201,108,0.6); letter-spacing: 4px; margin-top: 6px; font-size: 1rem;
+    }
+
+    /* ── COUNTDOWN ── */
+    #countdown {
+      background: linear-gradient(135deg, var(--red-dark) 0%, var(--red-mid) 40%, var(--red) 70%, var(--red-dark) 100%);
+      text-align: center; overflow: hidden;
+    }
+    #countdown::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 22px);
+    }
+    #countdown h2 { color: var(--gold-light); position: relative; }
+    #countdown .sub { color: rgba(232,201,108,0.5); position: relative; }
+    .cd-row {
+      display: flex; justify-content: center; align-items: flex-start;
+      gap: 0.5rem; flex-wrap: wrap; position: relative;
+    }
+    .cd-unit { text-align: center; min-width: 80px; }
+    .cd-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 9vw, 5.5rem); font-weight: 600;
+      color: var(--gold-light); line-height: 1; display: block;
+      text-shadow: 0 0 25px rgba(232,201,108,0.25);
+    }
+    .cd-lbl { font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-top: 6px; }
+    .cd-colon {
+      font-family: 'Cormorant Garamond', serif; font-size: 4rem; color: var(--gold);
+      opacity: 0.35; line-height: 1.1; animation: blinkColon 1s step-end infinite;
+    }
+    @keyframes blinkColon { 0%,100%{opacity:0.35;} 50%{opacity:0.08;} }
+
+    /* ── VENUE ── */
+    #venue { background: var(--cream); text-align: center; }
+    .venue-card {
+      max-width: 520px; margin: 0 auto 2.5rem;
+      padding: 2.8rem 2rem; border: 1px solid var(--gold);
+      position: relative; background: #fff;
+      box-shadow: 0 4px 30px rgba(139,0,0,0.07);
+    }
+    .vc { position: absolute; width: 22px; height: 22px; border-color: var(--gold); border-style: solid; }
+    .vc.tl { top:7px; left:7px; border-width: 2px 0 0 2px; }
+    .vc.tr { top:7px; right:7px; border-width: 2px 2px 0 0; }
+    .vc.bl { bottom:7px; left:7px; border-width: 0 0 2px 2px; }
+    .vc.br { bottom:7px; right:7px; border-width: 0 2px 2px 0; }
+    .venue-icon-big { font-size: 3rem; margin-bottom: 1.2rem; display: block; }
+    .venue-intro {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1rem; color: var(--text); opacity: 0.65; margin-bottom: 0.6rem;
+    }
+    .venue-name {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 4vw, 1.75rem);
+      font-weight: 600; color: var(--red); line-height: 1.4;
+    }
+    .venue-date { font-size: 0.8rem; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-top: 0.8rem; }
+    .map-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--red); color: #fff; text-decoration: none;
+      padding: 1rem 2.5rem; font-size: 0.78rem; letter-spacing: 3.5px;
+      text-transform: uppercase; font-family: 'Lato', sans-serif; font-weight: 700;
+      transition: all 0.3s; border: 2px solid var(--red);
+    }
+    .map-btn:hover { background: transparent; color: var(--red); }
+    .map-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+    /* ── ITINERARY ── */
+    #itinerary { background: #FEF5EB; text-align: center; }
+    .timeline { max-width: 520px; margin: 0 auto; position: relative; }
+    .timeline::before {
+      content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px; background: linear-gradient(to bottom, transparent, var(--gold), var(--red), var(--gold), transparent);
+      transform: translateX(-50%);
+    }
+    .tl-item { display: grid; grid-template-columns: 1fr 30px 1fr; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+    .tl-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--gold); border: 3px solid var(--red);
+      justify-self: center; z-index: 1; box-shadow: 0 0 0 4px rgba(201,150,59,0.15);
+    }
+    .tl-card {
+      background: #fff; border: 1px solid rgba(201,150,59,0.25);
+      padding: 1.1rem 1.3rem; text-align: left;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .tl-item:nth-child(even) .tl-card { grid-column: 3; text-align: right; }
+    .tl-item:nth-child(even) .tl-empty { grid-column: 1; grid-row: 1; }
+    .tl-empty { /* spacer */ }
+    .ev-time { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
+    .ev-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--red); }
+    .ev-desc { font-size: 0.82rem; color: var(--text); opacity: 0.65; margin-top: 4px; line-height: 1.55; }
+    /* Red ribbon top decoration */
+    #itinerary::before {
+      content: ''; display: block; height: 6px; position: absolute; top: 0; left: 0; right: 0;
+      background: repeating-linear-gradient(to right, var(--red) 0, var(--red) 40px, var(--gold) 40px, var(--gold) 50px);
+    }
+
+    /* ── DRESS CODE ── */
+    #dress-code { background: #fff; text-align: center; }
+    .dress-row { display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .dress-item { text-align: center; }
+    .dress-icon { font-size: 3.8rem; display: block; margin-bottom: 0.6rem; filter: drop-shadow(0 2px 6px rgba(139,0,0,0.15)); }
+    .dress-lbl { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: var(--red); }
+    .dress-note { font-size: 0.8rem; color: var(--text); opacity: 0.6; margin-top: 4px; max-width: 140px; line-height: 1.5; }
+    .dress-note-main {
+      margin-top: 2.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.1rem; color: var(--text); opacity: 0.7; max-width: 400px;
+      margin-left: auto; margin-right: auto; line-height: 1.8;
+    }
+
+    /* ── GIFTS ── */
+    #gifts { background: var(--cream); text-align: center; }
+    .gift-icons { font-size: 2.2rem; margin-bottom: 1.5rem; display: flex; justify-content: center; gap: 1.2rem; }
+    .gift-text {
+      max-width: 470px; margin: 0 auto;
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.15rem; line-height: 1.9; color: var(--text); opacity: 0.82;
+    }
+    .gift-text + .gift-text { margin-top: 1.2rem; }
+
+    /* ── TRAVEL ── */
+    #travel { background: #fff; text-align: center; }
+    .travel-grid {
+      display: flex; justify-content: center; gap: 1.2rem;
+      flex-wrap: wrap; max-width: 640px; margin: 0 auto 2.5rem;
+    }
+    .travel-card {
+      flex: 1; min-width: 140px; max-width: 190px;
+      border: 1px solid rgba(201,150,59,0.3); padding: 1.6rem 1.1rem;
+      background: var(--cream); position: relative; transition: box-shadow 0.2s;
+    }
+    .travel-card:hover { box-shadow: 0 4px 20px rgba(139,0,0,0.08); }
+    .travel-icon { font-size: 2.4rem; display: block; margin-bottom: 0.6rem; }
+    .travel-mode {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600;
+      color: var(--red); margin-bottom: 6px;
+    }
+    .travel-info { font-size: 0.8rem; color: var(--text); opacity: 0.65; line-height: 1.65; }
+    .travel-info strong { color: var(--text); opacity: 1; font-weight: 700; }
+    .travel-note {
+      max-width: 480px; margin: 0 auto 2.5rem;
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem;
+      color: var(--text); opacity: 0.72; line-height: 1.85;
+      border-top: 1px solid rgba(201,150,59,0.25); padding-top: 2rem;
+    }
+
+    /* ── FOOTER ── */
+    footer { background: #080101; text-align: center; padding: 2.5rem 1rem; }
+    footer .fn { font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--gold); opacity: 0.6; display: block; margin-bottom: 6px; }
+    footer p { font-size: 0.72rem; letter-spacing: 3px; color: rgba(253,248,240,0.3); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 500px) {
+      .scratch-wrap { width: 108px; height: 108px; }
+      .scratch-row { gap: 1.2rem; }
+      .div-amp, .vc { display: none; }
+      .timeline::before { left: 14px; }
+      .tl-item { grid-template-columns: 28px 1fr; gap: 0.8rem; }
+      .tl-dot { grid-column: 1; grid-row: 1; }
+      .tl-card { grid-column: 2; }
+      .tl-item:nth-child(even) .tl-card { grid-column: 2; text-align: left; }
+      .tl-empty { display: none; }
+      .couple-names { font-size: clamp(3rem, 15vw, 5rem); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ CURTAIN OVERLAY ══ -->
+<div class="curtain-overlay" id="curtainOverlay">
+  <div class="curtain-half curtain-left"></div>
+  <div class="curtain-half curtain-right"></div>
+</div>
+
+<!-- ══ CONFETTI ══ -->
+<canvas id="confettiCanvas"></canvas>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-badge">♦ &nbsp; Wedding Invitation &nbsp; ♦</div>
+
+  <div class="couple-names" aria-label="Nivetha and Shiva">
+    Nivetha
+    <span class="amp">&amp;</span>
+    Shiva
+  </div>
+
+  <div class="couple-details">
+    <div class="person">
+      <div class="pname">Nivetha</div>
+      <div class="pcred">Doctor, MBBS</div>
+    </div>
+    <div class="div-amp">✦</div>
+    <div class="person">
+      <div class="pname">Shiva</div>
+      <div class="pcred">B.E., TCS</div>
+    </div>
+  </div>
+
+  <div class="invite-box">
+    <p class="invite-text">
+      Together with their beloved families, we warmly invite you to celebrate the sacred union of two hearts. Your presence will make this moment truly complete.
+    </p>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">Scroll to explore</div>
+</section>
+
+<!-- ══ DATE REVEAL ══ -->
+<section id="date-reveal">
+  <h2><em>Reveal</em> the Date</h2>
+  <p class="sub">✦ &nbsp; Scratch each golden circle to discover &nbsp; ✦</p>
+
+  <div class="scratch-row">
+    <div class="scratch-wrap">
+      <div class="reveal-text" id="rev0">
+        <span class="reveal-main">25</span>
+        <span class="reveal-tag">Day</span>
+      </div>
+      <canvas class="scratch-canvas" id="sc0" width="140" height="140"></canvas>
+    </div>
+    <div class="scratch-wrap">
+      <div class="reveal-text" id="rev1">
+        <span class="reveal-main">May</span>
+        <span class="reveal-tag">Month</span>
+      </div>
+      <canvas class="scratch-canvas" id="sc1" width="140" height="140"></canvas>
+    </div>
+    <div class="scratch-wrap">
+      <div class="reveal-text" id="rev2">
+        <span class="reveal-main">2026</span>
+        <span class="reveal-tag">Year</span>
+      </div>
+      <canvas class="scratch-canvas" id="sc2" width="140" height="140"></canvas>
+    </div>
+  </div>
+
+  <div class="date-banner" id="dateBanner">
+    <h3>We're getting married!</h3>
+    <p>25 · May · 2026</p>
+  </div>
+</section>
+
+<!-- ══ COUNTDOWN ══ -->
+<section id="countdown">
+  <h2><em>Counting</em> the Days</h2>
+  <p class="sub">✦ &nbsp; Until we say "I Do" &nbsp; ✦</p>
+  <div class="cd-row">
+    <div class="cd-unit"><span class="cd-num" id="cdDays">00</span><div class="cd-lbl">Days</div></div>
+    <div class="cd-colon">:</div>
+    <div class="cd-unit"><span class="cd-num" id="cdHrs">00</span><div class="cd-lbl">Hours</div></div>
+    <div class="cd-colon">:</div>
+    <div class="cd-unit"><span class="cd-num" id="cdMins">00</span><div class="cd-lbl">Minutes</div></div>
+    <div class="cd-colon">:</div>
+    <div class="cd-unit"><span class="cd-num" id="cdSecs">00</span><div class="cd-lbl">Seconds</div></div>
+  </div>
+</section>
+
+<!-- ══ VENUE ══ -->
+<section id="venue">
+  <h2>The <em>Venue</em></h2>
+  <p class="sub">✦ &nbsp; Where love will bloom &nbsp; ✦</p>
+
+  <div class="venue-card">
+    <div class="vc tl"></div><div class="vc tr"></div>
+    <div class="vc bl"></div><div class="vc br"></div>
+    <span class="venue-icon-big">🏛️</span>
+    <p class="venue-intro">The celebration will take place at:</p>
+    <h3 class="venue-name">Vegupatti Visalakshi<br>Tirumana Mandapam</h3>
+    <p class="venue-date">25 · May · 2026</p>
+  </div>
+
+  <a href="https://maps.app.goo.gl/A8NCHbTx829hJy3q7" target="_blank" rel="noopener" class="map-btn">
+    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+    View on Google Maps
+  </a>
+</section>
+
+<!-- ══ ITINERARY ══ -->
+<section id="itinerary">
+  <h2>The <em>Celebration</em></h2>
+  <p class="sub">✦ &nbsp; A day full of joy &nbsp; ✦</p>
+
+  <div class="timeline">
+    <!-- Event 1: Odd → card on LEFT -->
+    <div class="tl-item">
+      <div class="tl-card">
+        <div class="ev-time">24 May · Prior Evening</div>
+        <div class="ev-title">Ponnazhaipu</div>
+        <div class="ev-desc">The beloved bride is ceremonially escorted from her ancestral home to the mandapam — accompanied by nadaswaram, family, and the joyful blessings of all who gather to send her forth.</div>
+      </div>
+      <div class="tl-dot"></div>
+      <div class="tl-empty"></div>
+    </div>
+    <!-- Event 2: Even → card on RIGHT -->
+    <div class="tl-item">
+      <div class="tl-empty"></div>
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="ev-time">25 May · Morning</div>
+        <div class="ev-title">Muhurtham</div>
+        <div class="ev-desc">The sacred Chettinad wedding rites — where two souls are bound together under the watchful eyes of the divine, elders, and all who hold them dear.</div>
+      </div>
+    </div>
+    <!-- Event 3: Odd → card on LEFT -->
+    <div class="tl-item">
+      <div class="tl-card">
+        <div class="ev-time">25 May · Following Ceremony</div>
+        <div class="ev-title">Chettinad Reception</div>
+        <div class="ev-desc">A grand celebration in true Chettinad style — vibrant music, traditional attire, and an abundant feast of authentic Chettinad flavours to honour the newlyweds.</div>
+      </div>
+      <div class="tl-dot"></div>
+      <div class="tl-empty"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DRESS CODE ══ -->
+<section id="dress-code">
+  <h2>Dress <em>Code</em></h2>
+  <p class="sub">✦ &nbsp; Come as elegantly as the occasion &nbsp; ✦</p>
+
+  <div class="dress-row">
+    <div class="dress-item">
+      <span class="dress-icon">👗</span>
+      <div class="dress-lbl">Ladies</div>
+      <div class="dress-note">Saree, Salwar Kameez or any elegant ethnic wear</div>
+    </div>
+    <div class="dress-item">
+      <span class="dress-icon">🥻</span>
+      <div class="dress-lbl">Gentlemen</div>
+      <div class="dress-note">Dhoti & Shirt, Kurta or formal Indian wear</div>
+    </div>
+  </div>
+
+  <p class="dress-note-main">Embrace the beauty of traditional Indian elegance. Any formal or ethnic attire is welcomed and cherished.</p>
+</section>
+
+<!-- ══ GIFTS ══ -->
+<section id="gifts">
+  <h2>Blessings <em>&amp; Gifts</em></h2>
+  <p class="sub">✦ &nbsp; Your love is our greatest treasure &nbsp; ✦</p>
+
+  <div class="gift-icons">🌸<span>💐</span>🎁</div>
+
+  <p class="gift-text">Your presence and blessings are the greatest gifts we could ever ask for. If you wish to honour us with something more, we are grateful for any contribution towards our new home and life together.</p>
+  <p class="gift-text" style="margin-top:1.2rem;">Cash gifts and envelopes are warmly welcomed. Every heartfelt gesture to help us build our future will be treasured forever.</p>
+</section>
+
+<!-- ══ TRAVEL ══ -->
+<section id="travel">
+  <h2>Getting <em>There</em></h2>
+  <p class="sub">✦ &nbsp; How to reach us &nbsp; ✦</p>
+
+  <div class="travel-grid">
+    <div class="travel-card">
+      <span class="travel-icon">🚆</span>
+      <div class="travel-mode">By Train</div>
+      <div class="travel-info">
+        <strong>Nearest Station</strong><br>
+        Karaikudi Railway Station<br>
+        (~15 km away)<br><br>
+        Autos &amp; cabs available from station exit
+      </div>
+    </div>
+    <div class="travel-card">
+      <span class="travel-icon">🚌</span>
+      <div class="travel-mode">By Bus</div>
+      <div class="travel-info">
+        <strong>TNSTC Buses</strong><br>
+        from Karaikudi &amp; Sivaganga<br>
+        alight at Vegupatti stop<br><br>
+        Frequent service on both routes
+      </div>
+    </div>
+    <div class="travel-card">
+      <span class="travel-icon">🚗</span>
+      <div class="travel-mode">By Road</div>
+      <div class="travel-info">
+        <strong>Via NH-38</strong><br>
+        Karaikudi → Manamadurai route<br>
+        Vegupatti is well-signposted<br><br>
+        Ample parking at the mandapam
+      </div>
+    </div>
+    <div class="travel-card">
+      <span class="travel-icon">✈️</span>
+      <div class="travel-mode">By Air</div>
+      <div class="travel-info">
+        <strong>Nearest Airport</strong><br>
+        Madurai Airport (IXM)<br>
+        (~60 km away)<br><br>
+        Cab hire available at the airport
+      </div>
+    </div>
+  </div>
+
+  <p class="travel-note">
+    If you need help with directions or local arrangements, please don't hesitate to reach out — we want your journey to be as joyful as the destination.
+  </p>
+
+  <a href="https://maps.app.goo.gl/A8NCHbTx829hJy3q7" target="_blank" rel="noopener" class="map-btn">
+    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+    Open in Google Maps
+  </a>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <span class="fn">Nivetha &amp; Shiva</span>
+  <p>25 May 2026 &nbsp;·&nbsp; With Love &amp; Joy</p>
+</footer>
+
+<script>
+/* ───────────────────────────────
+   CURTAIN
+─────────────────────────────── */
+(function () {
+  const overlay = document.getElementById('curtainOverlay');
+  // Hide after animation completes (delay 1s + duration 1.9s = 2.9s → 3.2s buffer)
+  setTimeout(() => {
+    overlay.style.pointerEvents = 'none';
+  }, 900);
+  setTimeout(() => {
+    overlay.style.display = 'none';
+  }, 3200);
+})();
+
+/* ───────────────────────────────
+   FLOATING PETALS IN HERO
+─────────────────────────────── */
+(function () {
+  const hero = document.getElementById('hero');
+  const colors = ['#C9963B','#E8C96C','#8B0000','#D4945A','#F5E6C8'];
+  for (let i = 0; i < 14; i++) {
+    const el = document.createElement('div');
+    el.className = 'petal';
+    el.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      background:${colors[i % colors.length]};
+      animation-duration:${9 + Math.random()*12}s;
+      animation-delay:${Math.random()*10}s;
+      transform:rotate(${Math.random()*360}deg) scale(${0.6+Math.random()*0.8});
+    `;
+    hero.appendChild(el);
+  }
+})();
+
+/* ───────────────────────────────
+   SCRATCH-OFF
+─────────────────────────────── */
+const scratchDone = [false, false, false];
+
+function initScratch(i) {
+  const canvas = document.getElementById('sc' + i);
+  const revEl  = document.getElementById('rev' + i);
+  const ctx    = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2, r = W / 2;
+
+  // Draw gold circle
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  const grd = ctx.createRadialGradient(cx - 20, cy - 20, 5, cx, cy, r);
+  grd.addColorStop(0, '#F0C050');
+  grd.addColorStop(0.5, '#C9963B');
+  grd.addColorStop(1, '#9A7020');
+  ctx.fillStyle = grd; ctx.fill();
+
+  // Inner ring
+  ctx.beginPath(); ctx.arc(cx, cy, r - 9, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(80,40,0,0.4)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+  // Sparkle dots
+  ctx.fillStyle = 'rgba(255,220,100,0.7)';
+  for (let k = 0; k < 7; k++) {
+    const a = (k / 7) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(cx + Math.cos(a) * 38, cy + Math.sin(a) * 38, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Label
+  ctx.fillStyle = '#4A2500';
+  ctx.font = 'bold 12px Lato, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('✦ Scratch Me ✦', cx, cy);
+
+  let drawing = false;
+
+  function getXY(e) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = W / rect.width, sy = H / rect.height;
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - rect.left) * sx, y: (src.clientY - rect.top) * sy };
+  }
+
+  function scratch(pos) {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, 24, 0, Math.PI * 2);
+    ctx.fill();
+    checkPct();
+  }
+
+  function checkPct() {
+    if (scratchDone[i]) return;
+    const d = ctx.getImageData(0, 0, W, H).data;
+    let clear = 0;
+    for (let p = 3; p < d.length; p += 4) if (d[p] < 100) clear++;
+    if (clear / (W * H) > 0.55) {
+      scratchDone[i] = true;
+      canvas.style.transition = 'opacity 0.4s'; canvas.style.opacity = '0';
+      revEl.style.opacity = '1';
+      setTimeout(() => canvas.style.pointerEvents = 'none', 450);
+      if (scratchDone.every(Boolean)) onAllRevealed();
+    }
+  }
+
+  canvas.addEventListener('mousedown',  e => { drawing = true; scratch(getXY(e)); });
+  canvas.addEventListener('mousemove',  e => { if (drawing) scratch(getXY(e)); });
+  canvas.addEventListener('mouseup',    () => drawing = false);
+  canvas.addEventListener('mouseleave', () => drawing = false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; }, { passive: false });
+  canvas.addEventListener('touchmove',  e => { e.preventDefault(); if (drawing) scratch(getXY(e)); }, { passive: false });
+  canvas.addEventListener('touchend',   () => drawing = false);
+}
+
+[0, 1, 2].forEach(initScratch);
+
+function onAllRevealed() {
+  document.getElementById('dateBanner').classList.add('show');
+  launchConfetti();
+}
+
+/* ───────────────────────────────
+   CONFETTI
+─────────────────────────────── */
+function launchConfetti() {
+  const cv = document.getElementById('confettiCanvas');
+  const ctx = cv.getContext('2d');
+  cv.width = window.innerWidth; cv.height = window.innerHeight;
+  cv.style.display = 'block'; cv.style.opacity = '1';
+
+  const COLORS = ['#C9963B','#E8C96C','#8B0000','#DC143C','#FFD700','#fff','#FF85A2'];
+  const pts = Array.from({ length: 130 }, () => ({
+    x: Math.random() * cv.width,
+    y: Math.random() * cv.height - cv.height,
+    w: 6 + Math.random() * 9, h: 3 + Math.random() * 5,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    vx: Math.random() * 2.5 - 1.2, vy: 2 + Math.random() * 3,
+    ang: Math.random() * 360, spin: Math.random() * 5 - 2.5
+  }));
+
+  const t0 = Date.now(); let raf;
+  function draw() {
+    const elapsed = Date.now() - t0;
+    if (elapsed > 5500) {
+      cancelAnimationFrame(raf);
+      cv.style.transition = 'opacity 0.8s'; cv.style.opacity = '0';
+      setTimeout(() => { cv.style.display = 'none'; }, 900);
+      return;
+    }
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    pts.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+      ctx.rotate(p.ang * Math.PI / 180);
+      ctx.globalAlpha = 0.88;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      p.x += p.vx; p.y += p.vy; p.ang += p.spin;
+      if (p.y > cv.height) { p.y = -8; p.x = Math.random() * cv.width; }
+    });
+    raf = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ───────────────────────────────
+   COUNTDOWN
+─────────────────────────────── */
+function tick() {
+  const target = new Date('2026-05-25T00:00:00+05:30').getTime();
+  const diff   = target - Date.now();
+  if (diff <= 0) {
+    ['cdDays','cdHrs','cdMins','cdSecs'].forEach(id => document.getElementById(id).textContent = '00');
+    return;
+  }
+  const pad = n => String(n).padStart(2,'0');
+  document.getElementById('cdDays').textContent = pad(Math.floor(diff / 86400000));
+  document.getElementById('cdHrs').textContent  = pad(Math.floor((diff % 86400000) / 3600000));
+  document.getElementById('cdMins').textContent = pad(Math.floor((diff % 3600000)  /   60000));
+  document.getElementById('cdSecs').textContent = pad(Math.floor((diff % 60000)    /    1000));
+}
+tick();
+setInterval(tick, 1000);
+
+
+</script>
+</body>
+</html>

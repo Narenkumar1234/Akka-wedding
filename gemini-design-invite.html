@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nivetha & Shiva - Wedding Invitation</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-red': '#A81C1C',
+                        'brand-darkred': '#7A1010',
+                        'brand-gold': '#D4AF37',
+                        'brand-lightgold': '#F3E5AB',
+                        'brand-bg': '#FFFDF9',
+                    },
+                    fontFamily: {
+                        script: ['"Great Vibes"', 'cursive'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'curtain-left': 'inset -15px 0 20px -10px rgba(0, 0, 0, 0.6)',
+                        'curtain-right': 'inset 15px 0 20px -10px rgba(0, 0, 0, 0.6)',
+                        'gold-glow': '0 0 15px rgba(212, 175, 55, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f3f4f6; /* Gray background for desktop */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Mobile App Container */
+        #app-container {
+            max-width: 430px; /* iPhone Pro Max width approximation */
+            margin: 0 auto;
+            background-color: #FFFDF9;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Curtain Animations */
+        .curtain {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, #A81C1C 0%, #7A1010 50%, #A81C1C 100%);
+            z-index: 50;
+            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        /* Curtain folds texture */
+        .curtain::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 10%,
+                rgba(0,0,0,0.1) 10%,
+                rgba(0,0,0,0.1) 20%
+            );
+            pointer-events: none;
+        }
+
+        #curtain-left { left: 0; transform-origin: left; }
+        #curtain-right { right: 0; transform-origin: right; }
+
+        .curtain-open-left { transform: scaleX(0); }
+        .curtain-open-right { transform: scaleX(0); }
+
+        /* Decorative borders */
+        .ornate-border {
+            border: 1px solid #D4AF37;
+            padding: 4px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .ornate-border::before {
+            content: '';
+            position: absolute;
+            top: -4px; left: -4px; right: -4px; bottom: -4px;
+            border: 1px solid rgba(168, 28, 28, 0.3);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        /* Prevent scrolling while drawing on canvas */
+        .scratch-canvas {
+            touch-action: none;
+        }
+
+        /* Fade in animation for content */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom Scrollbar for the container */
+        #app-container::-webkit-scrollbar { width: 6px; }
+        #app-container::-webkit-scrollbar-track { background: transparent; }
+        #app-container::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.5); border-radius: 10px; }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <!-- Main Mobile Container -->
+    <div id="app-container" class="h-screen overflow-y-auto overflow-x-hidden relative">
+
+        <!-- Audio element (Optional background music) -->
+        <audio id="bg-music" loop>
+            <source src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_820c427c3e.mp3?filename=wedding-piano-101435.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- Floating Music Control -->
+        <button id="music-btn" class="fixed top-4 right-4 z-40 bg-white/80 backdrop-blur p-2 rounded-full shadow-md text-brand-red hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+        </button>
+
+        <!-- Curtains -->
+        <div id="curtain-left" class="curtain shadow-curtain-left flex items-center justify-end pr-2">
+             <div class="text-brand-gold font-serif text-3xl opacity-50 font-bold tracking-widest" style="writing-mode: vertical-rl; transform: rotate(180deg);">NIVETHA</div>
+        </div>
+        <div id="curtain-right" class="curtain shadow-curtain-right flex items-center justify-start pl-2">
+             <div class="text-brand-gold font-serif text-3xl opacity-50 font-bold tracking-widest" style="writing-mode: vertical-rl; transform: rotate(180deg);">SHIVA</div>
+        </div>
+        
+        <!-- Center Open Button (Before Reveal) -->
+        <div id="open-invitation-btn" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[60] cursor-pointer animate-pulse transition-opacity duration-500">
+            <div class="bg-brand-gold text-brand-darkred font-serif font-bold py-3 px-6 rounded-full shadow-lg border-2 border-white flex items-center gap-2">
+                <span>Open Invitation</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+        </div>
+
+        <!-- Content Wrapper -->
+        <div class="px-6 py-12 relative z-10">
+            
+            <!-- Hero Section -->
+            <section class="text-center pt-8 pb-12 border-b border-brand-lightgold fade-in">
+                <p class="text-xs tracking-[0.2em] text-brand-red font-sans uppercase mb-4">Together with their families</p>
+                <h1 class="font-script text-6xl text-brand-darkred mb-2 leading-tight">Nivetha<br><span class="text-4xl text-brand-gold">&amp;</span><br>Shiva</h1>
+                
+                <div class="flex justify-center items-center gap-4 mt-6 text-sm font-sans text-gray-600">
+                    <div class="text-right">
+                        <span class="block font-semibold text-brand-darkred">Doctor, MBBS</span>
+                    </div>
+                    <div class="h-8 w-px bg-brand-gold"></div>
+                    <div class="text-left">
+                        <span class="block font-semibold text-brand-darkred">B.E., TCS</span>
+                    </div>
+                </div>
+
+                <p class="mt-8 font-serif italic text-gray-700 leading-relaxed text-sm px-4">
+                    "We would be honored to have your presence as we celebrate the beginning of our new life together."
+                </p>
+            </section>
+
+            <!-- Scratch Reveal Section -->
+            <section class="text-center py-12 border-b border-brand-lightgold fade-in">
+                <h2 class="font-serif text-2xl text-brand-darkred mb-2">Reveal the Date</h2>
+                <p class="font-sans text-xs text-gray-500 mb-8 uppercase tracking-widest">Scratch the gold circles</p>
+
+                <div class="flex justify-center items-center gap-3">
+                    <!-- Day Scratch -->
+                    <div class="relative w-20 h-20 rounded-full bg-white shadow-inner flex items-center justify-center border border-gray-100">
+                        <span class="absolute text-2xl font-serif font-bold text-brand-darkred">25</span>
+                        <canvas id="scratch-day" class="absolute top-0 left-0 w-full h-full rounded-full scratch-canvas cursor-pointer shadow-gold-glow"></canvas>
+                    </div>
+                    <!-- Month Scratch -->
+                    <div class="relative w-20 h-20 rounded-full bg-white shadow-inner flex items-center justify-center border border-gray-100">
+                        <span class="absolute text-xl font-serif font-bold text-brand-darkred uppercase">May</span>
+                        <canvas id="scratch-month" class="absolute top-0 left-0 w-full h-full rounded-full scratch-canvas cursor-pointer shadow-gold-glow"></canvas>
+                    </div>
+                    <!-- Year Scratch -->
+                    <div class="relative w-20 h-20 rounded-full bg-white shadow-inner flex items-center justify-center border border-gray-100">
+                        <span class="absolute text-xl font-serif font-bold text-brand-darkred">2026</span>
+                        <canvas id="scratch-year" class="absolute top-0 left-0 w-full h-full rounded-full scratch-canvas cursor-pointer shadow-gold-glow"></canvas>
+                    </div>
+                </div>
+                
+                <div id="reveal-message" class="mt-8 font-script text-4xl text-brand-red opacity-0 transition-opacity duration-1000">
+                    We're getting married!
+                </div>
+            </section>
+
+            <!-- Countdown Section -->
+            <section class="text-center py-12 border-b border-brand-lightgold fade-in">
+                <h2 class="font-serif text-2xl text-brand-darkred mb-8">Countdown</h2>
+                
+                <div class="grid grid-cols-4 gap-2 text-center ornate-border p-4 bg-white/50">
+                    <div class="flex flex-col">
+                        <span id="cd-days" class="text-3xl font-serif text-brand-darkred font-bold">00</span>
+                        <span class="text-[10px] font-sans uppercase tracking-wider text-gray-500 mt-1">Days</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span id="cd-hours" class="text-3xl font-serif text-brand-darkred font-bold">00</span>
+                        <span class="text-[10px] font-sans uppercase tracking-wider text-gray-500 mt-1">Hours</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span id="cd-mins" class="text-3xl font-serif text-brand-darkred font-bold">00</span>
+                        <span class="text-[10px] font-sans uppercase tracking-wider text-gray-500 mt-1">Mins</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span id="cd-secs" class="text-3xl font-serif text-brand-darkred font-bold">00</span>
+                        <span class="text-[10px] font-sans uppercase tracking-wider text-gray-500 mt-1">Secs</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Venue Section -->
+            <section class="text-center py-12 border-b border-brand-lightgold fade-in">
+                <h2 class="font-serif text-2xl text-brand-darkred mb-6">The Venue</h2>
+                
+                <!-- Simple SVG decorative building icon -->
+                <svg class="w-16 h-16 mx-auto text-brand-gold mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 21v-8M21 21v-8M3 13l9-7 9 7M9 21V11M15 21V11M12 21v-4"></path>
+                    <circle cx="12" cy="7" r="1.5" stroke="currentColor" fill="currentColor"></circle>
+                </svg>
+
+                <p class="font-sans text-xs text-gray-500 uppercase tracking-widest mb-2">The celebration will take place at</p>
+                <h3 class="font-serif text-xl font-bold text-gray-800 mb-2">Vegupatti Visalakshi<br>Tirumana Mandapam</h3>
+                <p class="font-sans text-sm text-gray-600 mb-8">
+                    May 25, 2026
+                </p>
+
+                <a href="https://maps.app.goo.gl/A8NCHbTx829hJy3q7" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-brand-red text-white font-sans text-sm font-medium py-3 px-8 rounded-full hover:bg-brand-darkred transition-colors shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Open in Google Maps
+                </a>
+            </section>
+
+            <!-- Itinerary Section -->
+            <section class="text-center py-12 border-b border-brand-lightgold fade-in">
+                <h2 class="font-serif text-2xl text-brand-darkred mb-8">Itinerary</h2>
+                
+                <div class="relative border-l border-brand-gold ml-4 text-left">
+                    <div class="mb-8 pl-6 relative">
+                        <div class="absolute w-3 h-3 bg-brand-red rounded-full -left-[6.5px] top-1.5 shadow-[0_0_0_4px_#FFFDF9]"></div>
+                        <h4 class="font-serif font-bold text-gray-800">Reception</h4>
+                        <p class="font-sans text-xs text-brand-gold font-medium mb-1">May 24, 2026 • Evening</p>
+                        <p class="font-sans text-sm text-gray-600">Join us for a joyful evening of music, dinner, and celebrations.</p>
+                    </div>
+                    
+                    <div class="pl-6 relative">
+                        <div class="absolute w-3 h-3 bg-brand-red rounded-full -left-[6.5px] top-1.5 shadow-[0_0_0_4px_#FFFDF9]"></div>
+                        <h4 class="font-serif font-bold text-gray-800">Muhurtham</h4>
+                        <p class="font-sans text-xs text-brand-gold font-medium mb-1">May 25, 2026 • Morning</p>
+                        <p class="font-sans text-sm text-gray-600">The auspicious wedding ceremony, followed by a traditional feast.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dress Code & Gifts -->
+            <div class="grid grid-cols-2 gap-4 py-12 border-b border-brand-lightgold fade-in text-center">
+                <div class="p-4">
+                    <svg class="w-8 h-8 mx-auto text-brand-red mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <h4 class="font-serif font-bold text-sm text-gray-800 mb-1">Dress Code</h4>
+                    <p class="font-sans text-xs text-gray-600">Traditional / Formal</p>
+                </div>
+                <div class="p-4">
+                    <svg class="w-8 h-8 mx-auto text-brand-red mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                    <h4 class="font-serif font-bold text-sm text-gray-800 mb-1">Blessings Only</h4>
+                    <p class="font-sans text-xs text-gray-600">Your presence is our biggest gift.</p>
+                </div>
+            </div>
+
+            <!-- RSVP Section -->
+            <section class="py-12 pb-24 fade-in">
+                <h2 class="font-script text-5xl text-center text-brand-darkred mb-2">RSVP</h2>
+                <p class="font-sans text-xs text-center text-gray-500 uppercase tracking-widest mb-8">Confirm your attendance</p>
+
+                <form id="rsvp-form" class="space-y-4 max-w-sm mx-auto">
+                    <div>
+                        <input type="text" placeholder="Full Name *" required class="w-full px-4 py-3 bg-white border border-gray-200 rounded-md font-sans text-sm focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors">
+                    </div>
+                    <div>
+                        <input type="email" placeholder="Email Address" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-md font-sans text-sm focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors">
+                    </div>
+                    <div>
+                        <input type="tel" placeholder="Phone Number *" required class="w-full px-4 py-3 bg-white border border-gray-200 rounded-md font-sans text-sm focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors">
+                    </div>
+                    
+                    <div class="pt-2 space-y-2">
+                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-md cursor-pointer hover:bg-gray-50 transition-colors">
+                            <input type="radio" name="attendance" value="yes" required class="text-brand-red focus:ring-brand-red w-4 h-4">
+                            <span class="font-sans text-sm text-gray-700">Yes, I'll be there!</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-md cursor-pointer hover:bg-gray-50 transition-colors">
+                            <input type="radio" name="attendance" value="no" class="text-brand-red focus:ring-brand-red w-4 h-4">
+                            <span class="font-sans text-sm text-gray-700">No, I can't make it</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full mt-6 bg-brand-darkred text-white font-sans font-medium py-3 rounded-md hover:bg-brand-red transition-colors shadow-md">
+                        Send RSVP
+                    </button>
+                    <div id="rsvp-success" class="hidden text-center text-green-600 font-sans text-sm mt-4 p-3 bg-green-50 rounded-md border border-green-200">
+                        Thank you! Your RSVP has been received.
+                    </div>
+                </form>
+            </section>
+            
+            <!-- Footer -->
+            <footer class="text-center pb-8 opacity-50">
+                <p class="font-script text-2xl text-brand-red">N & S</p>
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. Curtain Animation & Audio Logic ---
+            const btnOpen = document.getElementById('open-invitation-btn');
+            const curtainLeft = document.getElementById('curtain-left');
+            const curtainRight = document.getElementById('curtain-right');
+            const bgMusic = document.getElementById('bg-music');
+            const musicBtn = document.getElementById('music-btn');
+            const appContainer = document.getElementById('app-container');
+            
+            // Prevent scrolling on the container initially
+            appContainer.style.overflowY = 'hidden';
+
+            let isMusicPlaying = false;
+
+            const toggleMusic = () => {
+                if (isMusicPlaying) {
+                    bgMusic.pause();
+                    musicBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>';
+                } else {
+                    bgMusic.play().catch(e => console.log("Audio play prevented by browser"));
+                    musicBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>';
+                }
+                isMusicPlaying = !isMusicPlaying;
+            };
+
+            musicBtn.addEventListener('click', toggleMusic);
+
+            btnOpen.addEventListener('click', () => {
+                // Open curtains
+                curtainLeft.classList.add('curtain-open-left');
+                curtainRight.classList.add('curtain-open-right');
+                
+                // Hide button
+                btnOpen.style.opacity = '0';
+                setTimeout(() => btnOpen.remove(), 500);
+
+                // Show music control and start playing (if browser allows)
+                musicBtn.classList.remove('hidden');
+                toggleMusic();
+
+                // Allow scrolling
+                appContainer.style.overflowY = 'auto';
+
+                // Trigger scroll animation check
+                setTimeout(checkFadeIns, 500);
+            });
+
+
+            // --- 2. Scroll Animations ---
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const checkFadeIns = () => {
+                const triggerBottom = window.innerHeight * 0.9;
+                fadeElements.forEach(el => {
+                    const elTop = el.getBoundingClientRect().top;
+                    if(elTop < triggerBottom) {
+                        el.classList.add('visible');
+                    }
+                });
+            };
+            
+            appContainer.addEventListener('scroll', checkFadeIns);
+
+
+            // --- 3. Interactive Scratch-Off Logic ---
+            const canvases = [
+                { id: 'scratch-day', ctx: null, cleared: false },
+                { id: 'scratch-month', ctx: null, cleared: false },
+                { id: 'scratch-year', ctx: null, cleared: false }
+            ];
+
+            const scratchRadius = 15;
+
+            canvases.forEach(canvasObj => {
+                const canvas = document.getElementById(canvasObj.id);
+                // Ensure canvas rendering dimensions match actual CSS size
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                
+                const ctx = canvas.getContext('2d');
+                canvasObj.ctx = ctx;
+                
+                // Draw gold gradient covering the canvas
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, "#BF953F");
+                gradient.addColorStop(0.25, "#FCF6BA");
+                gradient.addColorStop(0.5, "#B38728");
+                gradient.addColorStop(0.75, "#FBF5B7");
+                gradient.addColorStop(1, "#AA771C");
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Add texture to gold
+                ctx.fillStyle = "rgba(0,0,0,0.05)";
+                for(let i=0; i<100; i++) {
+                    ctx.beginPath();
+                    ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*2, 0, Math.PI*2);
+                    ctx.fill();
+                }
+
+                // Interaction state
+                let isDrawing = false;
+
+                const getCoordinates = (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    // Handle touch and mouse events
+                    let x, y;
+                    if (e.touches && e.touches.length > 0) {
+                        x = e.touches[0].clientX - rect.left;
+                        y = e.touches[0].clientY - rect.top;
+                    } else {
+                        x = e.clientX - rect.left;
+                        y = e.clientY - rect.top;
+                    }
+                    return { x, y };
+                };
+
+                const scratch = (e) => {
+                    if (!isDrawing) return;
+                    e.preventDefault(); // Prevent scrolling on mobile
+                    
+                    const { x, y } = getCoordinates(e);
+                    
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.beginPath();
+                    ctx.arc(x, y, scratchRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    checkClearance(canvasObj, canvas, ctx);
+                };
+
+                // Event Listeners
+                canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
+                canvas.addEventListener('mousemove', scratch);
+                canvas.addEventListener('mouseup', () => { isDrawing = false; });
+                canvas.addEventListener('mouseleave', () => { isDrawing = false; });
+
+                canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); }, { passive: false });
+                canvas.addEventListener('touchmove', scratch, { passive: false });
+                canvas.addEventListener('touchend', () => { isDrawing = false; });
+            });
+
+            const checkClearance = (canvasObj, canvas, ctx) => {
+                if (canvasObj.cleared) return;
+                
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                let transparentPixels = 0;
+                
+                // Check alpha channel
+                for (let i = 3; i < data.length; i += 4) {
+                    if (data[i] === 0) transparentPixels++;
+                }
+                
+                const clearPercentage = (transparentPixels / (canvas.width * canvas.height)) * 100;
+                
+                // If scratched more than 60%, reveal the whole thing
+                if (clearPercentage > 60) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvasObj.cleared = true;
+                    canvas.style.pointerEvents = 'none'; // Stop interactions
+                    checkAllCleared();
+                }
+            };
+
+            const checkAllCleared = () => {
+                if (canvases.every(c => c.cleared)) {
+                    document.getElementById('reveal-message').style.opacity = '1';
+                    fireConfetti();
+                }
+            };
+
+            const fireConfetti = () => {
+                const duration = 3000;
+                const end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({
+                        particleCount: 5,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#A81C1C', '#D4AF37', '#ffffff']
+                    });
+                    confetti({
+                        particleCount: 5,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#A81C1C', '#D4AF37', '#ffffff']
+                    });
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+            };
+
+
+            // --- 4. Countdown Logic ---
+            const countdownDate = new Date("May 25, 2026 00:00:00").getTime();
+
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const distance = countdownDate - now;
+
+                if (distance < 0) {
+                    document.getElementById("cd-days").innerText = "00";
+                    document.getElementById("cd-hours").innerText = "00";
+                    document.getElementById("cd-mins").innerText = "00";
+                    document.getElementById("cd-secs").innerText = "00";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Add leading zeros
+                document.getElementById("cd-days").innerText = days.toString().padStart(2, '0');
+                document.getElementById("cd-hours").innerText = hours.toString().padStart(2, '0');
+                document.getElementById("cd-mins").innerText = minutes.toString().padStart(2, '0');
+                document.getElementById("cd-secs").innerText = seconds.toString().padStart(2, '0');
+            };
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown(); // Initial call
+
+
+            // --- 5. RSVP Form Logic ---
+            const rsvpForm = document.getElementById('rsvp-form');
+            const rsvpSuccess = document.getElementById('rsvp-success');
+
+            rsvpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // In a real application, you would send this data to a backend or Firebase here
+                
+                // Show success message
+                rsvpForm.querySelectorAll('input, button').forEach(el => el.disabled = true);
+                rsvpForm.querySelector('button').style.opacity = '0.5';
+                rsvpSuccess.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nivetha & Shiva | Wedding Invitation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --crimson: #8B0000;
+      --crimson-light: #A52020;
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --gold-dark: #9A7A2A;
+      --white: #FFFDF8;
+      --cream: #FDF5E6;
+      --text-dark: #2C1810;
+      --text-mid: #5C3D2E;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--white);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ─── CURTAIN OVERLAY ─────────────────────────────────────── */
+    #curtain-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      pointer-events: none;
+    }
+
+    .curtain {
+      width: 50%;
+      height: 100%;
+      background: var(--crimson);
+      position: relative;
+      overflow: hidden;
+      transition: transform 1.6s cubic-bezier(0.77, 0, 0.18, 1);
+    }
+
+    .curtain-left { transform-origin: left center; }
+    .curtain-right { transform-origin: right center; transform: scaleX(-1); }
+
+    /* Curtain folds */
+    .curtain::before, .curtain::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 18%;
+      background: rgba(0,0,0,0.18);
+    }
+    .curtain::before { left: 20%; }
+    .curtain::after  { left: 55%; }
+
+    /* Curtain top valance */
+    .curtain-valance {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: var(--crimson);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1s ease 1.8s;
+    }
+    .curtain-valance::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--crimson) 0px,
+        var(--crimson-light) 40px,
+        var(--crimson) 80px
+      );
+    }
+    .curtain-valance-rope {
+      position: fixed;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 30px;
+      background: var(--gold);
+      z-index: 10001;
+      transition: opacity 1s ease 1.8s;
+    }
+    .curtain-valance-tassel {
+      position: fixed;
+      top: 78px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 14px;
+      background: var(--gold);
+      border-radius: 50%;
+      z-index: 10001;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: opacity 1s ease 1.8s;
+    }
+
+    .curtain-open .curtain-left  { transform: translateX(-100%); }
+    .curtain-open .curtain-right { transform: translateX(100%) scaleX(-1); }
+    .curtain-open .curtain-valance,
+    .curtain-open .curtain-valance-rope,
+    .curtain-open .curtain-valance-tassel { opacity: 0; pointer-events: none; }
+
+    /* ─── CONFETTI ────────────────────────────────────────────── */
+    #confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9000;
+      overflow: hidden;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      top: -10px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ─── HERO ────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #fff8f0 0%, var(--cream) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A84C' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-ornament {
+      color: var(--gold);
+      font-size: 1.4rem;
+      letter-spacing: 8px;
+      margin-bottom: 16px;
+      opacity: 0.8;
+    }
+
+    .couple-names {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem, 12vw, 6rem);
+      color: var(--crimson);
+      line-height: 1.1;
+      text-shadow: 2px 2px 8px rgba(139,0,0,0.15);
+    }
+
+    .ampersand {
+      color: var(--gold);
+      display: block;
+      font-size: 0.7em;
+      margin: -8px 0;
+    }
+
+    .couple-details {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .person-detail {
+      text-align: center;
+    }
+
+    .person-name-small {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: var(--text-mid);
+      font-style: italic;
+    }
+
+    .person-qual {
+      font-size: 0.82rem;
+      color: var(--gold-dark);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .divider-gold {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 28px auto;
+    }
+
+    .intro-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      color: var(--text-mid);
+      max-width: 520px;
+      line-height: 1.8;
+      font-style: italic;
+    }
+
+    /* ─── SECTION SHARED ──────────────────────────────────────── */
+    section {
+      padding: 70px 20px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      color: var(--crimson);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    /* ─── SCRATCH CIRCLES ─────────────────────────────────────── */
+    #reveal {
+      background: var(--cream);
+      border-top: 3px solid var(--gold);
+      border-bottom: 3px solid var(--gold);
+      text-align: center;
+    }
+
+    .scratch-instruction {
+      color: var(--text-mid);
+      font-size: 0.92rem;
+      margin-bottom: 32px;
+    }
+
+    .scratch-circles {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .scratch-wrap {
+      position: relative;
+      width: 130px;
+      height: 130px;
+    }
+
+    .scratch-reveal {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fff8e1, #fffde7);
+      border: 2px solid var(--gold);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .scratch-reveal span.big {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--crimson);
+    }
+
+    .scratch-reveal span.small {
+      font-size: 0.7rem;
+      color: var(--gold-dark);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .scratch-canvas {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      cursor: crosshair;
+    }
+
+    .revealed-message {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      color: var(--crimson);
+      margin-top: 16px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      min-height: 48px;
+    }
+
+    .revealed-message.show { opacity: 1; }
+
+    /* ─── COUNTDOWN ───────────────────────────────────────────── */
+    #countdown {
+      text-align: center;
+    }
+
+    .countdown-grid {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .countdown-unit {
+      background: var(--crimson);
+      color: #fff;
+      border-radius: 12px;
+      padding: 18px 22px;
+      min-width: 80px;
+      box-shadow: 0 4px 20px rgba(139,0,0,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .countdown-unit::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .countdown-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1;
+      display: block;
+    }
+
+    .countdown-label {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* ─── VENUE ───────────────────────────────────────────────── */
+    #venue {
+      text-align: center;
+    }
+
+    .venue-frame {
+      border: 2px solid var(--crimson);
+      border-radius: 4px;
+      padding: 36px 28px;
+      position: relative;
+      margin: 0 auto;
+      max-width: 480px;
+    }
+
+    .venue-frame::before, .venue-frame::after {
+      content: '❧';
+      position: absolute;
+      color: var(--gold);
+      font-size: 1.6rem;
+    }
+    .venue-frame::before { top: -14px; left: 50%; transform: translateX(-50%); background: var(--white); padding: 0 8px; }
+    .venue-frame::after  { bottom: -14px; left: 50%; transform: translateX(-50%) scaleY(-1); background: var(--white); padding: 0 8px; }
+
+    .venue-intro {
+      font-style: italic;
+      color: var(--text-mid);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .venue-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.2rem, 4vw, 1.5rem);
+      color: var(--crimson);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .map-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 28px;
+      padding: 13px 28px;
+      background: var(--crimson);
+      color: #fff;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 4px 16px rgba(139,0,0,0.3);
+    }
+
+    .map-btn:hover { background: var(--crimson-light); transform: translateY(-2px); }
+
+    /* ─── ITINERARY ───────────────────────────────────────────── */
+    #itinerary {
+      background: #fff8f0;
+      border-top: 1px solid #f0d9c0;
+      border-bottom: 1px solid #f0d9c0;
+    }
+
+    .itinerary-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-width: 400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .itinerary-list::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--gold), var(--crimson), var(--gold));
+    }
+
+    .itinerary-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 20px 0;
+      padding-left: 4px;
+    }
+
+    .itinerary-dot {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 50%;
+      background: var(--crimson);
+      border: 3px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .itinerary-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: var(--crimson);
+    }
+
+    .itinerary-text p {
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      margin-top: 4px;
+    }
+
+    /* ─── DRESS CODE ──────────────────────────────────────────── */
+    #dresscode {
+      text-align: center;
+    }
+
+    .dress-illustration {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+
+    .dress-figure {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dress-icon {
+      font-size: 3.5rem;
+    }
+
+    .dress-label {
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+    }
+
+    .dress-note {
+      background: var(--cream);
+      border-left: 4px solid var(--crimson);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      text-align: left;
+      font-size: 0.93rem;
+      color: var(--text-mid);
+      max-width: 420px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ─── GIFTS ───────────────────────────────────────────────── */
+    #gifts {
+      background: var(--cream);
+      text-align: center;
+      border-top: 3px double var(--gold);
+      border-bottom: 3px double var(--gold);
+    }
+
+    .gift-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .gift-text {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      line-height: 1.8;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    /* ─── RSVP ────────────────────────────────────────────────── */
+    #rsvp {
+      text-align: center;
+    }
+
+    .rsvp-form {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+
+    .form-field label {
+      font-size: 0.82rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      font-weight: 700;
+    }
+
+    .form-field input {
+      border: 1.5px solid #d4b896;
+      border-radius: 8px;
+      padding: 13px 16px;
+      font-size: 0.96rem;
+      font-family: 'Lato', sans-serif;
+      color: var(--text-dark);
+      background: #fff;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .form-field input:focus {
+      border-color: var(--crimson);
+    }
+
+    .rsvp-options {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .rsvp-option {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .rsvp-option input[type="radio"] {
+      display: none;
+    }
+
+    .rsvp-option-label {
+      display: block;
+      border: 2px solid #d4b896;
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .rsvp-option input[type="radio"]:checked + .rsvp-option-label {
+      border-color: var(--crimson);
+      background: var(--crimson);
+      color: #fff;
+    }
+
+    .submit-btn {
+      padding: 15px;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(201,168,76,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: 'Lato', sans-serif;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(201,168,76,0.5);
+    }
+
+    .rsvp-success {
+      display: none;
+      background: #f0fff4;
+      border: 2px solid #48bb78;
+      border-radius: 12px;
+      padding: 24px;
+      color: #276749;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    /* ─── FOOTER ──────────────────────────────────────────────── */
+    footer {
+      background: var(--crimson);
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+      padding: 32px 20px;
+      font-size: 0.85rem;
+      font-family: 'Lato', sans-serif;
+    }
+
+    footer .footer-names {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    /* ─── RIBBON DECORATION ───────────────────────────────────── */
+    .ribbon-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 auto 36px;
+      max-width: 320px;
+    }
+
+    .ribbon-line {
+      flex: 1;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--crimson));
+    }
+    .ribbon-line.right {
+      background: linear-gradient(90deg, var(--crimson), transparent);
+    }
+
+    .ribbon-jewel {
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.3);
+    }
+
+    /* ─── SCROLL FADE-IN ──────────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURTAIN -->
+  <div id="curtain-overlay">
+    <div class="curtain curtain-left"></div>
+    <div class="curtain curtain-right"></div>
+  </div>
+  <div class="curtain-valance"></div>
+  <div class="curtain-valance-rope"></div>
+  <div class="curtain-valance-tassel"></div>
+
+  <!-- CONFETTI -->
+  <div id="confetti-container"></div>
+
+  <!-- ── HERO ─────────────────────────────────────────────────── -->
+  <section id="hero">
+    <p class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</p>
+    <div class="couple-names">
+      Nivetha
+      <span class="ampersand">&amp;</span>
+      Shiva
+    </div>
+    <div class="couple-details">
+      <div class="person-detail">
+        <p class="person-name-small">Nivetha</p>
+        <p class="person-qual">Doctor, MBBS</p>
+      </div>
+      <div class="person-detail">
+        <p class="person-name-small">Shiva</p>
+        <p class="person-qual">B.E., TCS</p>
+      </div>
+    </div>
+    <div class="divider-gold"></div>
+    <p class="intro-text">
+      With overflowing joy and the blessings of our families,<br>
+      we warmly invite you to celebrate the union of our hearts<br>
+      and the beginning of our forever together.
+    </p>
+    <p class="hero-ornament" style="margin-top:24px;">✦ &nbsp; ✦ &nbsp; ✦</p>
+  </section>
+
+  <!-- ── SCRATCH & REVEAL ──────────────────────────────────────── -->
+  <section id="reveal" style="max-width:100%; padding:70px 20px;">
+    <div style="max-width:720px; margin:0 auto;">
+      <p class="section-label fade-in">The Big Day</p>
+      <h2 class="section-title fade-in">Reveal the Date</h2>
+      <div class="ribbon-divider fade-in">
+        <div class="ribbon-line"></div>
+        <div class="ribbon-jewel"></div>
+        <div class="ribbon-line right"></div>
+      </div>
+      <p class="scratch-instruction fade-in">Scratch away each golden circle to unveil the date ✨</p>
+      <div class="scratch-circles">
+        <div class="scratch-wrap fade-in" id="sw-0">
+          <div class="scratch-reveal">
+            <span class="big">25</span>
+            <span class="small">Day</span>
+          </div>
+          <canvas class="scratch-canvas" id="sc-0" width="130" height="130"></canvas>
+        </div>
+        <div class="scratch-wrap fade-in" id="sw-1">
+          <div class="scratch-reveal">
+            <span class="big">May</span>
+            <span class="small">Month</span>
+          </div>
+          <canvas class="scratch-canvas" id="sc-1" width="130" height="130"></canvas>
+        </div>
+        <div class="scratch-wrap fade-in" id="sw-2">
+          <div class="scratch-reveal">
+            <span class="big">2026</span>
+            <span class="small">Year</span>
+          </div>
+          <canvas class="scratch-canvas" id="sc-2" width="130" height="130"></canvas>
+        </div>
+      </div>
+      <div class="revealed-message" id="revealed-msg">We're getting married! 🎉</div>
+    </div>
+  </section>
+
+  <!-- ── COUNTDOWN ─────────────────────────────────────────────── -->
+  <section id="countdown">
+    <p class="section-label fade-in">Counting Every Moment</p>
+    <h2 class="section-title fade-in">The Big Day Is Near</h2>
+    <div class="ribbon-divider fade-in">
+      <div class="ribbon-line"></div>
+      <div class="ribbon-jewel"></div>
+      <div class="ribbon-line right"></div>
+    </div>
+    <div class="countdown-grid fade-in">
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-days">--</span>
+        <span class="countdown-label">Days</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-hours">--</span>
+        <span class="countdown-label">Hours</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-minutes">--</span>
+        <span class="countdown-label">Minutes</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="countdown-num" id="cd-seconds">--</span>
+        <span class="countdown-label">Seconds</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VENUE ──────────────────────────────────────────────────── -->
+  <section id="venue">
+    <p class="section-label fade-in">Where Love Unfolds</p>
+    <h2 class="section-title fade-in">Venue</h2>
+    <div class="ribbon-divider fade-in">
+      <div class="ribbon-line"></div>
+      <div class="ribbon-jewel"></div>
+      <div class="ribbon-line right"></div>
+    </div>
+    <div class="venue-frame fade-in">
+      <!-- Decorative line-art arch SVG -->
+      <svg viewBox="0 0 200 60" width="160" style="margin-bottom:18px;opacity:0.6;" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10,55 Q10,10 100,10 Q190,10 190,55" stroke="#8B0000" stroke-width="1.5" fill="none"/>
+        <path d="M30,55 Q30,22 100,22 Q170,22 170,55" stroke="#C9A84C" stroke-width="1" fill="none"/>
+        <circle cx="100" cy="10" r="3" fill="#C9A84C"/>
+        <circle cx="10" cy="55" r="2" fill="#8B0000"/>
+        <circle cx="190" cy="55" r="2" fill="#8B0000"/>
+      </svg>
+      <p class="venue-intro">The celebration will take place at:</p>
+      <p class="venue-name">Vegupatti Visalakshi<br>Tirumana Mandapam</p>
+      <a class="map-btn" href="https://maps.app.goo.gl/A8NCHbTx829hJy3q7" target="_blank" rel="noopener noreferrer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Open in Google Maps
+      </a>
+    </div>
+  </section>
+
+  <!-- ── ITINERARY ──────────────────────────────────────────────── -->
+  <section id="itinerary" style="max-width:100%; padding:70px 20px;">
+    <div style="max-width:720px; margin:0 auto;">
+      <p class="section-label fade-in">Flow of Events</p>
+      <h2 class="section-title fade-in">Event Itinerary</h2>
+      <div class="ribbon-divider fade-in">
+        <div class="ribbon-line"></div>
+        <div class="ribbon-jewel"></div>
+        <div class="ribbon-line right"></div>
+      </div>
+      <ul class="itinerary-list fade-in">
+        <li class="itinerary-item">
+          <div class="itinerary-dot">🌸</div>
+          <div class="itinerary-text">
+            <h3>Reception</h3>
+            <p>May 24, 2026 · Evening<br>Welcome, mingle, and blessings for the couple</p>
+          </div>
+        </li>
+        <li class="itinerary-item">
+          <div class="itinerary-dot">🕯️</div>
+          <div class="itinerary-text">
+            <h3>Muhurtham Ceremony</h3>
+            <p>May 25, 2026 · Morning<br>The sacred wedding ritual — the auspicious moment</p>
+          </div>
+        </li>
+        <li class="itinerary-item">
+          <div class="itinerary-dot">🍽️</div>
+          <div class="itinerary-text">
+            <h3>Grand Wedding Feast</h3>
+            <p>May 25, 2026 · Afternoon<br>Traditional lunch celebration with family &amp; friends</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── DRESS CODE ─────────────────────────────────────────────── -->
+  <section id="dresscode">
+    <p class="section-label fade-in">What to Wear</p>
+    <h2 class="section-title fade-in">Dress Code</h2>
+    <div class="ribbon-divider fade-in">
+      <div class="ribbon-line"></div>
+      <div class="ribbon-jewel"></div>
+      <div class="ribbon-line right"></div>
+    </div>
+    <div class="dress-illustration fade-in">
+      <div class="dress-figure">
+        <span class="dress-icon">👘</span>
+        <span class="dress-label">Ladies</span>
+      </div>
+      <div class="dress-figure">
+        <span class="dress-icon">🥻</span>
+        <span class="dress-label">Sarees Welcome</span>
+      </div>
+      <div class="dress-figure">
+        <span class="dress-icon">🤵</span>
+        <span class="dress-label">Gentlemen</span>
+      </div>
+    </div>
+    <div class="dress-note fade-in">
+      We encourage our guests to dress in <strong>traditional Indian formals</strong> or <strong>elegant ethnic wear</strong>.
+      Ladies are warmly invited to arrive in sarees, salwars, or lehengas.
+      Gentlemen may wear dhotis, kurtas, or formal suits.
+      Come dressed in celebration! 🌹
+    </div>
+  </section>
+
+  <!-- ── GIFTS ──────────────────────────────────────────────────── -->
+  <section id="gifts" style="max-width:100%; padding:70px 20px;">
+    <div style="max-width:720px; margin:0 auto; text-align:center;">
+      <p class="section-label fade-in">Blessings &amp; Gifts</p>
+      <h2 class="section-title fade-in">Gifts</h2>
+      <div class="ribbon-divider fade-in">
+        <div class="ribbon-line"></div>
+        <div class="ribbon-jewel"></div>
+        <div class="ribbon-line right"></div>
+      </div>
+      <span class="gift-icon fade-in">🎁</span>
+      <p class="gift-text fade-in">
+        Your presence is our greatest gift.<br><br>
+        If you wish to shower us with blessings,
+        we gratefully welcome <strong>cash gifts</strong> or <strong>gold</strong> as a token of love and tradition.<br><br>
+        Your warm wishes mean the world to us. 💛
+      </p>
+    </div>
+  </section>
+
+  <!-- ── RSVP ───────────────────────────────────────────────────── -->
+  <section id="rsvp">
+    <p class="section-label fade-in">Join Us</p>
+    <h2 class="section-title fade-in">Confirm Your Attendance</h2>
+    <div class="ribbon-divider fade-in">
+      <div class="ribbon-line"></div>
+      <div class="ribbon-jewel"></div>
+      <div class="ribbon-line right"></div>
+    </div>
+    <form class="rsvp-form fade-in" id="rsvp-form" novalidate>
+      <div class="form-field">
+        <label for="rsvp-name">Full Name</label>
+        <input type="text" id="rsvp-name" name="name" placeholder="Your full name" required />
+      </div>
+      <div class="form-field">
+        <label for="rsvp-email">Email</label>
+        <input type="email" id="rsvp-email" name="email" placeholder="your@email.com" />
+      </div>
+      <div class="form-field">
+        <label for="rsvp-phone">Phone Number</label>
+        <input type="tel" id="rsvp-phone" name="phone" placeholder="+91 XXXXX XXXXX" />
+      </div>
+      <div class="form-field">
+        <label>Will you attend?</label>
+        <div class="rsvp-options">
+          <div class="rsvp-option">
+            <input type="radio" name="attendance" id="att-yes" value="yes" />
+            <label class="rsvp-option-label" for="att-yes">✅ Yes, I'll be there!</label>
+          </div>
+          <div class="rsvp-option">
+            <input type="radio" name="attendance" id="att-no" value="no" />
+            <label class="rsvp-option-label" for="att-no">😔 No, I can't make it</label>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn">Send RSVP 💌</button>
+    </form>
+    <div class="rsvp-success fade-in" id="rsvp-success">
+      🎉 Thank you! Your RSVP has been received. We look forward to celebrating with you!
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <footer>
+    <p class="footer-names">Nivetha &amp; Shiva</p>
+    <p>May 25th, 2026 &nbsp;·&nbsp; Vegupatti Visalakshi Tirumana Mandapam</p>
+    <p style="margin-top:10px; opacity:0.6; font-size:0.75rem;">Made with ❤️ for our special day</p>
+  </footer>
+
+  <script>
+  (() => {
+    'use strict';
+
+    /* ── Curtain Open ──────────────────────────────────────────── */
+    const overlay = document.getElementById('curtain-overlay');
+    setTimeout(() => {
+      overlay.classList.add('curtain-open');
+      document.querySelector('.curtain-valance').classList.add('curtain-open');
+      document.querySelector('.curtain-valance-rope').classList.add('curtain-open');
+      document.querySelector('.curtain-valance-tassel').classList.add('curtain-open');
+    }, 600);
+
+    /* ── Scroll Fade-In ────────────────────────────────────────── */
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    fadeEls.forEach(el => io.observe(el));
+
+    /* ── Countdown ─────────────────────────────────────────────── */
+    const wedding = new Date('2026-05-25T08:00:00');
+    function tick() {
+      const diff = wedding - Date.now();
+      if (diff <= 0) {
+        ['days','hours','minutes','seconds'].forEach(k => document.getElementById('cd-'+k).textContent = '0');
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('cd-days').textContent    = String(d).padStart(2,'0');
+      document.getElementById('cd-hours').textContent   = String(h).padStart(2,'0');
+      document.getElementById('cd-minutes').textContent = String(m).padStart(2,'0');
+      document.getElementById('cd-seconds').textContent = String(s).padStart(2,'0');
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    /* ── Scratch Cards ─────────────────────────────────────────── */
+    const SCRATCH_THRESHOLD = 0.55; // 55% scratched = revealed
+    const scratchStates = [false, false, false];
+    let confettiFired = false;
+
+    function initScratch(idx) {
+      const canvas = document.getElementById('sc-'+idx);
+      const ctx = canvas.getContext('2d');
+      const size = 130;
+
+      // Gold gradient fill
+      const grad = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+      grad.addColorStop(0, '#E8C96A');
+      grad.addColorStop(0.6, '#C9A84C');
+      grad.addColorStop(1, '#9A7A2A');
+
+      // Clip to circle
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(size/2, size/2, size/2, 0, Math.PI*2);
+      ctx.clip();
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, size, size);
+
+      // Embossed text hint
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.font = 'bold 13px Lato, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('SCRATCH ME', size/2, size/2);
+      ctx.restore();
+
+      let isDown = false;
+
+      function getPos(e, rect) {
+        const src = e.touches ? e.touches[0] : e;
+        return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+      }
+
+      function scratch(x, y) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 18, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+        checkReveal(idx, canvas, size);
+      }
+
+      canvas.addEventListener('mousedown',  (e) => { isDown = true; const r = canvas.getBoundingClientRect(); scratch(...Object.values(getPos(e,r))); });
+      canvas.addEventListener('mousemove',  (e) => { if (!isDown) return; const r = canvas.getBoundingClientRect(); scratch(...Object.values(getPos(e,r))); });
+      canvas.addEventListener('mouseup',    () => isDown = false);
+      canvas.addEventListener('mouseleave', () => isDown = false);
+      canvas.addEventListener('touchstart', (e) => { e.preventDefault(); isDown = true; const r = canvas.getBoundingClientRect(); scratch(...Object.values(getPos(e,r))); }, { passive: false });
+      canvas.addEventListener('touchmove',  (e) => { e.preventDefault(); if (!isDown) return; const r = canvas.getBoundingClientRect(); scratch(...Object.values(getPos(e,r))); }, { passive: false });
+      canvas.addEventListener('touchend',   () => isDown = false);
+    }
+
+    function checkReveal(idx, canvas, size) {
+      if (scratchStates[idx]) return;
+      const ctx = canvas.getContext('2d');
+      const data = ctx.getImageData(0, 0, size, size).data;
+      let transparent = 0, total = 0;
+      for (let i = 3; i < data.length; i += 4) {
+        total++;
+        if (data[i] < 128) transparent++;
+      }
+      const ratio = transparent / total;
+      if (ratio >= SCRATCH_THRESHOLD) {
+        scratchStates[idx] = true;
+        // Animate canvas fade-out
+        canvas.style.transition = 'opacity 0.5s';
+        canvas.style.opacity = '0';
+
+        if (scratchStates.every(Boolean) && !confettiFired) {
+          confettiFired = true;
+          document.getElementById('revealed-msg').classList.add('show');
+          launchConfetti();
+        }
+      }
+    }
+
+    [0, 1, 2].forEach(i => initScratch(i));
+
+    /* ── Confetti ──────────────────────────────────────────────── */
+    function launchConfetti() {
+      const container = document.getElementById('confetti-container');
+      const colors = ['#8B0000','#C9A84C','#E8C96A','#fff','#f5c6c6','#ffd700','#b22222'];
+      const shapes = ['circle', 'rect', 'triangle'];
+      const count = 140;
+
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const size = 8 + Math.random() * 8;
+
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.width = size + 'px';
+        piece.style.height = size + 'px';
+        piece.style.background = color;
+        piece.style.animationDuration = (2.5 + Math.random() * 3) + 's';
+        piece.style.animationDelay = (Math.random() * 1.5) + 's';
+
+        if (shape === 'circle') piece.style.borderRadius = '50%';
+        else if (shape === 'triangle') {
+          piece.style.background = 'transparent';
+          piece.style.borderLeft = `${size/2}px solid transparent`;
+          piece.style.borderRight = `${size/2}px solid transparent`;
+          piece.style.borderBottom = `${size}px solid ${color}`;
+          piece.style.width = '0';
+          piece.style.height = '0';
+        }
+
+        container.appendChild(piece);
+        piece.addEventListener('animationend', () => piece.remove());
+      }
+    }
+
+    /* ── RSVP Form ─────────────────────────────────────────────── */
+    document.getElementById('rsvp-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('rsvp-name').value.trim();
+      if (!name) {
+        document.getElementById('rsvp-name').focus();
+        document.getElementById('rsvp-name').style.borderColor = '#e53e3e';
+        return;
+      }
+      document.getElementById('rsvp-form').style.display = 'none';
+      const success = document.getElementById('rsvp-success');
+      success.style.display = 'block';
+      setTimeout(() => success.classList.add('visible'), 50);
+    });
+
+    document.getElementById('rsvp-name').addEventListener('input', function() {
+      this.style.borderColor = '';
+    });
+  })();
+  </script>
+</body>
+</html>

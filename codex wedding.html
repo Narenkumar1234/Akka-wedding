@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nivetha & Shiva | Wedding Invitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fbf7f1;
+      --bg-soft: #fffdf9;
+      --text: #33201c;
+      --muted: #73524a;
+      --red: #8d1128;
+      --red-deep: #5a0716;
+      --gold: #d4ab4f;
+      --gold-soft: #f2dfaa;
+      --line: rgba(141, 17, 40, 0.16);
+      --shadow: 0 24px 60px rgba(93, 17, 30, 0.12);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(212, 171, 79, 0.16), transparent 28%),
+        linear-gradient(180deg, #fffdf9 0%, #fbf7f1 52%, #f8efe5 100%);
+      overflow-x: hidden;
+    }
+
+    body.loaded {
+      overflow-x: hidden;
+    }
+
+    body.revealed .curtain {
+      pointer-events: none;
+    }
+
+    .curtain {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      pointer-events: none;
+    }
+
+    .curtain-panel {
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 20%, transparent 80%, rgba(0, 0, 0, 0.16)),
+        repeating-linear-gradient(
+          90deg,
+          #6e0a1d 0 26px,
+          #8d1128 26px 52px,
+          #a21933 52px 78px
+        );
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.18);
+      transform: translateX(0);
+      animation-duration: 2.2s;
+      animation-delay: 0.55s;
+      animation-fill-mode: forwards;
+      animation-timing-function: cubic-bezier(0.75, 0, 0.24, 1);
+    }
+
+    .curtain-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top, rgba(255, 233, 190, 0.2), transparent 22%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 16%);
+      mix-blend-mode: screen;
+    }
+
+    .curtain-panel.left {
+      border-right: 2px solid rgba(245, 209, 123, 0.48);
+      animation-name: curtain-left;
+    }
+
+    .curtain-panel.right {
+      border-left: 2px solid rgba(245, 209, 123, 0.48);
+      animation-name: curtain-right;
+    }
+
+    .curtain-title {
+      position: fixed;
+      top: 44%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 21;
+      width: min(88vw, 420px);
+      text-align: center;
+      color: #fff5e8;
+      text-shadow: 0 10px 30px rgba(0, 0, 0, 0.26);
+      animation: title-fade 1.4s ease 0.3s forwards;
+    }
+
+    .curtain-title p {
+      margin: 0;
+      font-size: 0.82rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .curtain-title h1 {
+      margin: 0.8rem 0 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2rem, 10vw, 3.8rem);
+      font-weight: 600;
+    }
+
+    .page-shell {
+      position: relative;
+      padding: 1rem 1rem 4rem;
+    }
+
+    .page-shell::before,
+    .page-shell::after {
+      content: "";
+      position: fixed;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212, 171, 79, 0.1), transparent 72%);
+      z-index: -1;
+      filter: blur(4px);
+    }
+
+    .page-shell::before {
+      top: 6%;
+      left: -60px;
+    }
+
+    .page-shell::after {
+      right: -80px;
+      bottom: 10%;
+    }
+
+    .hero {
+      position: relative;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 5.5rem 1.2rem 2rem;
+      text-align: center;
+    }
+
+    .hero-card,
+    .section-card,
+    .rsvp-card {
+      position: relative;
+      background: rgba(255, 253, 249, 0.88);
+      border: 1px solid rgba(141, 17, 40, 0.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .hero-card {
+      padding: 2rem 1.35rem 2.4rem;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(254, 246, 237, 0.92)),
+        #fff;
+    }
+
+    .hero-card::before,
+    .section-card::before,
+    .rsvp-card::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(212, 171, 79, 0.36);
+      border-radius: calc(var(--radius) - 10px);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(141, 17, 40, 0.14);
+      background: rgba(141, 17, 40, 0.06);
+      color: var(--red);
+      font-size: 0.76rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(3.1rem, 13vw, 6rem);
+      line-height: 0.95;
+      color: var(--red);
+      text-shadow: 0 8px 24px rgba(141, 17, 40, 0.08);
+    }
+
+    .hero .ampersand {
+      display: block;
+      margin: 0.25rem 0;
+      font-size: 1.45rem;
+      font-family: "Cormorant Garamond", serif;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .intro-copy {
+      max-width: 650px;
+      margin: 1.5rem auto 0;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .hero-details {
+      display: grid;
+      gap: 1rem;
+      margin: 1.9rem 0 1.35rem;
+    }
+
+    .detail-chip {
+      padding: 1rem;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 238, 227, 0.78));
+      border: 1px solid rgba(141, 17, 40, 0.1);
+    }
+
+    .detail-chip strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.45rem;
+      color: var(--red-deep);
+    }
+
+    .detail-chip span {
+      color: var(--muted);
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+    }
+
+    .quick-stats {
+      display: grid;
+      gap: 0.85rem;
+      margin-top: 1.6rem;
+    }
+
+    .stat-box {
+      padding: 1rem 1.1rem;
+      border-radius: 22px;
+      background: rgba(141, 17, 40, 0.05);
+      border: 1px solid rgba(141, 17, 40, 0.08);
+    }
+
+    .stat-box h2,
+    .section-card h2,
+    .rsvp-card h2 {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(1.95rem, 6vw, 2.7rem);
+      font-weight: 600;
+      color: var(--red-deep);
+    }
+
+    .stat-box p {
+      margin: 0.4rem 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-grid {
+      max-width: 1080px;
+      margin: 1.25rem auto 0;
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .section-card,
+    .rsvp-card {
+      padding: 1.45rem;
+    }
+
+    .section-copy {
+      margin: 0.75rem 0 1.1rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .scratch-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .scratch-card {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.9), rgba(242, 223, 170, 0.88) 45%, rgba(212, 171, 79, 0.98) 72%),
+        linear-gradient(135deg, #f2d88a, #c89c3d);
+      border: 2px solid rgba(126, 85, 19, 0.3);
+      box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.4), 0 18px 30px rgba(141, 17, 40, 0.12);
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      isolation: isolate;
+    }
+
+    .scratch-label {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 0.5rem;
+      text-align: center;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 700;
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      color: var(--red);
+      z-index: 0;
+    }
+
+    .scratch-card canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      border-radius: 50%;
+      cursor: grab;
+    }
+
+    .scratch-status {
+      margin-top: 1.2rem;
+      padding: 0.95rem 1rem;
+      border-radius: 18px;
+      text-align: center;
+      background: rgba(141, 17, 40, 0.05);
+      color: var(--muted);
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+    }
+
+    .scratch-status strong {
+      display: block;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.5rem;
+      color: var(--red);
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 1.3rem;
+    }
+
+    .countdown-tile {
+      padding: 1rem;
+      text-align: center;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(251, 240, 231, 0.9));
+      border: 1px solid rgba(141, 17, 40, 0.1);
+    }
+
+    .countdown-value {
+      display: block;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2rem, 8vw, 3rem);
+      color: var(--red-deep);
+      line-height: 1;
+    }
+
+    .countdown-label {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .venue-frame {
+      position: relative;
+      margin-top: 1.25rem;
+      padding: 1.3rem 1rem;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(141, 17, 40, 0.06), rgba(255, 255, 255, 0.92));
+      border: 1px solid rgba(141, 17, 40, 0.12);
+      overflow: hidden;
+    }
+
+    .venue-frame::before,
+    .venue-frame::after {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(212, 171, 79, 0.3);
+      border-radius: 18px;
+      pointer-events: none;
+    }
+
+    .venue-art {
+      width: 100%;
+      max-width: 340px;
+      margin: 0 auto 1rem;
+      display: block;
+    }
+
+    .venue-frame h3,
+    .small-card h3 {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.55rem;
+      color: var(--red);
+    }
+
+    .venue-frame p,
+    .small-card p {
+      margin: 0.5rem 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.1rem;
+    }
+
+    .primary-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      padding: 0.95rem 1.4rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #a31731, #7c0d20);
+      color: #fffaf2;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      box-shadow: 0 16px 28px rgba(141, 17, 40, 0.22);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .primary-button:hover,
+    .primary-button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 32px rgba(141, 17, 40, 0.28);
+    }
+
+    .details-wrap,
+    .two-column {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .small-card {
+      position: relative;
+      padding: 1.15rem;
+      border-radius: 24px;
+      border: 1px solid rgba(141, 17, 40, 0.12);
+      background: rgba(255, 255, 255, 0.86);
+      overflow: hidden;
+    }
+
+    .small-card.ribbon::before,
+    .small-card.ribbon::after {
+      content: "";
+      position: absolute;
+      width: 68px;
+      height: 18px;
+      background: linear-gradient(135deg, #b21935, #7a0f21);
+      box-shadow: 0 6px 14px rgba(141, 17, 40, 0.18);
+    }
+
+    .small-card.ribbon::before {
+      top: 16px;
+      left: -18px;
+      transform: rotate(-28deg);
+    }
+
+    .small-card.ribbon::after {
+      top: 16px;
+      right: -18px;
+      transform: rotate(28deg);
+    }
+
+    .timeline-item + .timeline-item {
+      margin-top: 0.95rem;
+      padding-top: 0.95rem;
+      border-top: 1px dashed rgba(141, 17, 40, 0.18);
+    }
+
+    .timeline-item span {
+      display: inline-block;
+      margin-bottom: 0.35rem;
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .dress-figure {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .figure-card {
+      padding: 1rem 0.85rem;
+      border-radius: 20px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(251, 239, 226, 0.82));
+      border: 1px solid rgba(141, 17, 40, 0.08);
+    }
+
+    .figure-icon {
+      position: relative;
+      width: 66px;
+      height: 96px;
+      margin: 0 auto 0.8rem;
+    }
+
+    .figure-icon::before,
+    .figure-icon::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .figure-icon::before {
+      top: 0;
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--red);
+      border-radius: 50%;
+      background: rgba(255, 250, 244, 0.95);
+    }
+
+    .figure-icon::after {
+      top: 28px;
+      width: 42px;
+      height: 56px;
+      border-radius: 18px 18px 12px 12px;
+      border: 2px solid var(--red);
+      background: linear-gradient(180deg, rgba(212, 171, 79, 0.18), rgba(141, 17, 40, 0.08));
+    }
+
+    .figure-card.formal .figure-icon::after {
+      clip-path: polygon(0 0, 100% 0, 78% 100%, 22% 100%);
+    }
+
+    .figure-card.ethnic .figure-icon::after {
+      clip-path: polygon(16% 0, 84% 0, 100% 100%, 0 100%);
+    }
+
+    .gift-note {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+      margin-top: 1rem;
+    }
+
+    .gift-icon {
+      flex: 0 0 auto;
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: rgba(141, 17, 40, 0.08);
+      border: 1px solid rgba(141, 17, 40, 0.12);
+      color: var(--red);
+    }
+
+    .gift-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    form {
+      margin-top: 1.2rem;
+      display: grid;
+      gap: 0.95rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.42rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--red-deep);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.95rem 1rem;
+      border-radius: 16px;
+      border: 1px solid rgba(141, 17, 40, 0.18);
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text);
+      font: inherit;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: rgba(141, 17, 40, 0.5);
+      box-shadow: 0 0 0 4px rgba(141, 17, 40, 0.08);
+    }
+
+    .choice-group {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.95rem 1rem;
+      border-radius: 18px;
+      border: 1px solid rgba(141, 17, 40, 0.12);
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    .choice input {
+      width: auto;
+      margin: 0;
+      accent-color: var(--red);
+      transform: scale(1.15);
+      box-shadow: none;
+    }
+
+    .choice span {
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .form-note,
+    .rsvp-message {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .rsvp-message {
+      min-height: 1.8rem;
+      font-weight: 600;
+      color: var(--red);
+    }
+
+    .confetti-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 30;
+    }
+
+    .confetti {
+      position: absolute;
+      top: -10vh;
+      width: 10px;
+      height: 18px;
+      opacity: 0;
+      border-radius: 3px;
+      animation: confetti-fall 3.8s ease-in forwards;
+    }
+
+    .footer-note {
+      max-width: 840px;
+      margin: 1.6rem auto 0;
+      padding: 0 1rem;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    @keyframes curtain-left {
+      to {
+        transform: translateX(-102%);
+      }
+    }
+
+    @keyframes curtain-right {
+      to {
+        transform: translateX(102%);
+      }
+    }
+
+    @keyframes title-fade {
+      0% {
+        opacity: 1;
+      }
+      65% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(var(--drift, 0), 120vh, 0) rotate(720deg);
+      }
+    }
+
+    @media (min-width: 720px) {
+      .page-shell {
+        padding: 1.35rem 1.35rem 5rem;
+      }
+
+      .hero {
+        padding-top: 6.5rem;
+      }
+
+      .hero-details,
+      .quick-stats,
+      .details-wrap,
+      .two-column {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .content-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+      }
+
+      .content-grid > .section-card.full,
+      .content-grid > .rsvp-card {
+        grid-column: 1 / -1;
+      }
+
+      .countdown {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .curtain-panel,
+      .curtain-title,
+      .confetti {
+        animation: none !important;
+      }
+
+      .curtain {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="curtain" aria-hidden="true">
+    <div class="curtain-panel left"></div>
+    <div class="curtain-panel right"></div>
+  </div>
+
+  <div class="curtain-title" aria-hidden="true">
+    <p>A grand invitation</p>
+    <h1>The curtains rise</h1>
+  </div>
+
+  <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-card">
+        <span class="eyebrow">Wedding Invitation</span>
+        <h1>Nivetha <span class="ampersand">&amp;</span> Shiva</h1>
+
+        <div class="hero-details">
+          <div class="detail-chip">
+            <strong>Nivetha</strong>
+            <span>Doctor, MBBS</span>
+          </div>
+          <div class="detail-chip">
+            <strong>Shiva</strong>
+            <span>B.E., TCS</span>
+          </div>
+        </div>
+
+        <p class="intro-copy">
+          With joyful hearts and the blessings of our families, we warmly invite you to celebrate the beginning of our forever and share in a day filled with love, laughter, and graceful tradition.
+        </p>
+
+        <div class="quick-stats">
+          <div class="stat-box">
+            <h2>Reveal the Date</h2>
+            <p>Scratch each golden seal to unveil the wedding day beneath the shimmer.</p>
+          </div>
+          <div class="stat-box">
+            <h2>Join the Celebration</h2>
+            <p>From the first welcome to the final blessing, your presence will make the day complete.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <article class="section-card" id="date-reveal">
+        <span class="eyebrow">Interactive Moment</span>
+        <h2>Reveal the Date</h2>
+        <p class="section-copy">
+          Swipe your finger across each seal and uncover the day when our story becomes a shared celebration.
+        </p>
+
+        <div class="scratch-grid">
+          <div class="scratch-card" data-reveal="25">
+            <div class="scratch-label">25</div>
+            <canvas></canvas>
+          </div>
+          <div class="scratch-card" data-reveal="May">
+            <div class="scratch-label">May</div>
+            <canvas></canvas>
+          </div>
+          <div class="scratch-card" data-reveal="2026">
+            <div class="scratch-label">2026</div>
+            <canvas></canvas>
+          </div>
+        </div>
+
+        <div class="scratch-status" id="scratch-status">
+          Scratch all three golden circles to reveal the announcement.
+        </div>
+      </article>
+
+      <article class="section-card">
+        <span class="eyebrow">Countdown</span>
+        <h2>Until the Wedding Day</h2>
+        <p class="section-copy">
+          The celebration begins on 25 May 2026. Every passing second brings us closer to the moment we say yes.
+        </p>
+
+        <div class="countdown" id="countdown" aria-live="polite">
+          <div class="countdown-tile">
+            <span class="countdown-value" data-unit="days">0</span>
+            <span class="countdown-label">Days</span>
+          </div>
+          <div class="countdown-tile">
+            <span class="countdown-value" data-unit="hours">0</span>
+            <span class="countdown-label">Hours</span>
+          </div>
+          <div class="countdown-tile">
+            <span class="countdown-value" data-unit="minutes">0</span>
+            <span class="countdown-label">Minutes</span>
+          </div>
+          <div class="countdown-tile">
+            <span class="countdown-value" data-unit="seconds">0</span>
+            <span class="countdown-label">Seconds</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="section-card full">
+        <span class="eyebrow">Venue</span>
+        <h2>Where We Celebrate</h2>
+        <p class="section-copy">
+          The celebration will take place at:
+        </p>
+
+        <div class="venue-frame">
+          <svg class="venue-art" viewBox="0 0 360 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M34 132H326" stroke="#8D1128" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M66 132V84L120 54L180 24L240 54L294 84V132" stroke="#8D1128" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M104 132V87H256V132" stroke="#D4AB4F" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M140 132V100H220V132" stroke="#8D1128" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M160 132V110H200V132" stroke="#8D1128" stroke-width="2.4" stroke-linejoin="round"/>
+            <path d="M82 70H278" stroke="#D4AB4F" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="180" cy="56" r="8" stroke="#D4AB4F" stroke-width="2.4"/>
+          </svg>
+
+          <h3>Vegupatti Visalakshi tirumana mandapam</h3>
+          <p>
+            An elegant setting for our families, friends, and every cherished blessing we hope to receive on our special day.
+          </p>
+
+          <div class="button-row">
+            <a class="primary-button" href="https://maps.app.goo.gl/A8NCHbTx829hJy3q7" target="_blank" rel="noreferrer">
+              Open in Google Maps
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="section-card">
+        <span class="eyebrow">Itinerary</span>
+        <h2>Flow of Events</h2>
+        <div class="details-wrap">
+          <div class="small-card ribbon">
+            <div class="timeline-item">
+              <span>Evening Welcome</span>
+              <h3>Reception</h3>
+              <p>An evening of greetings, photographs, music, and warm conversations with loved ones.</p>
+            </div>
+          </div>
+          <div class="small-card ribbon">
+            <div class="timeline-item">
+              <span>Sacred Ceremony</span>
+              <h3>Muhurtham</h3>
+              <p>A beautiful traditional ceremony where vows, rituals, and blessings come together in one unforgettable morning.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="section-card">
+        <span class="eyebrow">Dress Code</span>
+        <h2>Dress in Celebration</h2>
+        <p class="section-copy">
+          Festive elegance is warmly encouraged. Traditional attire or refined formal wear will perfectly complement the day.
+        </p>
+
+        <div class="dress-figure">
+          <div class="figure-card formal">
+            <div class="figure-icon" aria-hidden="true"></div>
+            <h3>Formal</h3>
+            <p>Soft neutrals, deep jewel tones, and polished silhouettes.</p>
+          </div>
+          <div class="figure-card ethnic">
+            <div class="figure-icon" aria-hidden="true"></div>
+            <h3>Traditional</h3>
+            <p>Sarees, sherwanis, kurtas, and graceful festive details.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="section-card">
+        <span class="eyebrow">Blessings</span>
+        <h2>Gifts & Good Wishes</h2>
+        <div class="gift-note">
+          <div class="gift-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 10H20V20H4V10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M2.8 10H21.2V6.4H2.8V10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M12 6.4V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M12 6.4C10.4 6.4 8.8 5.6 8.8 4.1C8.8 2.8 10.1 2.3 11 2.9C11.7 3.4 12 4.4 12 6.4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 6.4C13.6 6.4 15.2 5.6 15.2 4.1C15.2 2.8 13.9 2.3 13 2.9C12.3 3.4 12 4.4 12 6.4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <p class="section-copy">
+              Your love, blessings, and presence are the most meaningful gifts we could ask for. If you wish to bring something, a thoughtful token for our new beginning will always be cherished.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <article class="rsvp-card">
+        <span class="eyebrow">RSVP</span>
+        <h2>Confirm Your Attendance</h2>
+        <p class="section-copy">
+          Kindly share your response so we can welcome you with care and joy.
+        </p>
+
+        <form id="rsvp-form">
+          <div>
+            <label for="full-name">Full Name</label>
+            <input id="full-name" name="fullName" type="text" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="two-column">
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="Enter your email" required>
+            </div>
+            <div>
+              <label for="phone">Phone Number</label>
+              <input id="phone" name="phone" type="tel" placeholder="Enter your phone number" required>
+            </div>
+          </div>
+
+          <div>
+            <label>Will you join us?</label>
+            <div class="choice-group">
+              <label class="choice" for="attending-yes">
+                <input id="attending-yes" name="attendance" type="radio" value="Yes, I'll be there!" required>
+                <span>Yes, I'll be there!</span>
+              </label>
+              <label class="choice" for="attending-no">
+                <input id="attending-no" name="attendance" type="radio" value="No, I can't make it">
+                <span>No, I can't make it</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="primary-button" type="submit">Send RSVP</button>
+          <p class="form-note">This RSVP interaction confirms attendance on the page and stores it in this browser for the demo.</p>
+          <p class="rsvp-message" id="rsvp-message" aria-live="polite"></p>
+        </form>
+      </article>
+    </section>
+
+    <p class="footer-note">
+      We look forward to celebrating this unforgettable chapter with you and creating memories filled with warmth, grace, and togetherness.
+    </p>
+  </main>
+
+  <script>
+    document.body.classList.add("loaded");
+
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.body.classList.add("revealed");
+      }, 2450);
+    });
+
+    const targetDate = new Date("2026-05-25T00:00:00+05:30").getTime();
+    const countdownRoot = document.getElementById("countdown");
+
+    function updateCountdown() {
+      const now = Date.now();
+      const difference = Math.max(targetDate - now, 0);
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((difference / (1000 * 60)) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+
+      countdownRoot.querySelector('[data-unit="days"]').textContent = String(days).padStart(2, "0");
+      countdownRoot.querySelector('[data-unit="hours"]').textContent = String(hours).padStart(2, "0");
+      countdownRoot.querySelector('[data-unit="minutes"]').textContent = String(minutes).padStart(2, "0");
+      countdownRoot.querySelector('[data-unit="seconds"]').textContent = String(seconds).padStart(2, "0");
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    const scratchCards = Array.from(document.querySelectorAll(".scratch-card"));
+    const scratchStatus = document.getElementById("scratch-status");
+    const revealState = new Set();
+    let confettiTriggered = false;
+
+    function drawGoldOverlay(canvas, context) {
+      const ratio = window.devicePixelRatio || 1;
+      const bounds = canvas.getBoundingClientRect();
+      canvas.width = bounds.width * ratio;
+      canvas.height = bounds.height * ratio;
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.scale(ratio, ratio);
+      context.globalCompositeOperation = "source-over";
+
+      const gradient = context.createLinearGradient(0, 0, bounds.width, bounds.height);
+      gradient.addColorStop(0, "#f8e4a2");
+      gradient.addColorStop(0.4, "#d5ab4c");
+      gradient.addColorStop(1, "#b17f1f");
+
+      context.clearRect(0, 0, bounds.width, bounds.height);
+      context.fillStyle = gradient;
+      context.beginPath();
+      context.arc(bounds.width / 2, bounds.height / 2, Math.min(bounds.width, bounds.height) / 2, 0, Math.PI * 2);
+      context.fill();
+
+      context.fillStyle = "rgba(255,255,255,0.28)";
+      context.beginPath();
+      context.arc(bounds.width * 0.35, bounds.height * 0.32, bounds.width * 0.16, 0, Math.PI * 2);
+      context.fill();
+
+      context.globalCompositeOperation = "destination-out";
+    }
+
+    function checkScratchCompletion(card, canvas, context) {
+      if (card.dataset.done === "true") {
+        return;
+      }
+
+      const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+      let transparent = 0;
+
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] < 80) {
+          transparent += 1;
+        }
+      }
+
+      const totalPixels = canvas.width * canvas.height;
+      const ratio = transparent / totalPixels;
+
+      if (ratio > 0.5) {
+        card.dataset.done = "true";
+        canvas.style.transition = "opacity 220ms ease";
+        canvas.style.opacity = "0";
+        revealState.add(card.dataset.reveal);
+        updateRevealMessage();
+      }
+    }
+
+    function updateRevealMessage() {
+      if (revealState.size === 3) {
+        scratchStatus.innerHTML = "<div><strong>25 May 2026</strong>We&apos;re getting married!</div>";
+
+        if (!confettiTriggered) {
+          confettiTriggered = true;
+          launchConfetti();
+        }
+
+        return;
+      }
+
+      scratchStatus.textContent = "Keep scratching to reveal the full wedding date.";
+    }
+
+    function getPoint(event, bounds) {
+      if (event.touches && event.touches[0]) {
+        return {
+          x: event.touches[0].clientX - bounds.left,
+          y: event.touches[0].clientY - bounds.top
+        };
+      }
+
+      return {
+        x: event.clientX - bounds.left,
+        y: event.clientY - bounds.top
+      };
+    }
+
+    scratchCards.forEach((card) => {
+      const canvas = card.querySelector("canvas");
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      let scratching = false;
+
+      function resizeCanvas() {
+        drawGoldOverlay(canvas, context);
+      }
+
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      function startScratch(event) {
+        if (card.dataset.done === "true") {
+          return;
+        }
+
+        scratching = true;
+        scratch(event);
+      }
+
+      function stopScratch() {
+        scratching = false;
+        checkScratchCompletion(card, canvas, context);
+      }
+
+      function scratch(event) {
+        if (!scratching || card.dataset.done === "true") {
+          return;
+        }
+
+        event.preventDefault();
+        const bounds = canvas.getBoundingClientRect();
+        const point = getPoint(event, bounds);
+
+        context.beginPath();
+        context.arc(point.x, point.y, Math.max(bounds.width * 0.08, 18), 0, Math.PI * 2);
+        context.fill();
+      }
+
+      canvas.addEventListener("mousedown", startScratch);
+      canvas.addEventListener("mousemove", scratch);
+      window.addEventListener("mouseup", stopScratch);
+
+      canvas.addEventListener("touchstart", startScratch, { passive: false });
+      canvas.addEventListener("touchmove", scratch, { passive: false });
+      window.addEventListener("touchend", stopScratch);
+    });
+
+    function launchConfetti() {
+      const layer = document.getElementById("confetti-layer");
+      const colors = ["#8d1128", "#d4ab4f", "#f2dfaa", "#ffffff"];
+      const pieces = 54;
+
+      for (let i = 0; i < pieces; i += 1) {
+        const piece = document.createElement("span");
+        piece.className = "confetti";
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.background = colors[i % colors.length];
+        piece.style.animationDelay = `${Math.random() * 400}ms`;
+        piece.style.setProperty("--drift", `${(Math.random() - 0.5) * 180}px`);
+        piece.style.transform = `translateY(0) rotate(${Math.random() * 180}deg)`;
+        layer.appendChild(piece);
+
+        setTimeout(() => {
+          piece.remove();
+        }, 4200);
+      }
+    }
+
+    const rsvpForm = document.getElementById("rsvp-form");
+    const rsvpMessage = document.getElementById("rsvp-message");
+
+    rsvpForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(rsvpForm);
+      const payload = {
+        fullName: formData.get("fullName"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        attendance: formData.get("attendance"),
+        submittedAt: new Date().toISOString()
+      };
+
+      const existingEntries = JSON.parse(localStorage.getItem("codexWeddingRsvps") || "[]");
+      existingEntries.push(payload);
+      localStorage.setItem("codexWeddingRsvps", JSON.stringify(existingEntries));
+
+      rsvpMessage.textContent = `${payload.fullName}, your response has been noted. Thank you for replying "${payload.attendance}".`;
+      rsvpForm.reset();
+    });
+  </script>
+</body>
+</html>
