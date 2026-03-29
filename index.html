@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Nivetha & Shiva — Wedding Invitation</title>
+  <title>Shiva kumar & Nivetha — Wedding Invitation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
@@ -249,6 +249,7 @@
     .vc.bl { bottom:7px; left:7px; border-width: 0 0 2px 2px; }
     .vc.br { bottom:7px; right:7px; border-width: 0 2px 2px 0; }
     .venue-icon-big { font-size: 3rem; margin-bottom: 1.2rem; display: block; }
+    .venue-svg { display: block; margin: 0 auto 1.4rem; width: 100%; max-width: 320px; height: auto; }
     .venue-intro {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
       font-size: 1rem; color: var(--text); opacity: 0.65; margin-bottom: 0.6rem;
@@ -299,18 +300,7 @@
       background: repeating-linear-gradient(to right, var(--red) 0, var(--red) 40px, var(--gold) 40px, var(--gold) 50px);
     }
 
-    /* ── DRESS CODE ── */
-    #dress-code { background: #fff; text-align: center; }
-    .dress-row { display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; margin-top: 0.5rem; }
-    .dress-item { text-align: center; }
-    .dress-icon { font-size: 3.8rem; display: block; margin-bottom: 0.6rem; filter: drop-shadow(0 2px 6px rgba(139,0,0,0.15)); }
-    .dress-lbl { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: var(--red); }
-    .dress-note { font-size: 0.8rem; color: var(--text); opacity: 0.6; margin-top: 4px; max-width: 140px; line-height: 1.5; }
-    .dress-note-main {
-      margin-top: 2.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic;
-      font-size: 1.1rem; color: var(--text); opacity: 0.7; max-width: 400px;
-      margin-left: auto; margin-right: auto; line-height: 1.8;
-    }
+
 
     /* ── GIFTS ── */
     #gifts { background: var(--cream); text-align: center; }
@@ -399,10 +389,6 @@
       .tl-item:nth-child(even) .tl-card { grid-column: 2; text-align: left; }
       .tl-empty { display: none; }
 
-      /* Dress code */
-      .dress-row { gap: 2rem; }
-      .dress-note-main { font-size: 1rem; padding: 0 0.5rem; }
-
       /* Travel */
       /* Travel: exactly 2 per row */
       .travel-grid { gap: 0.8rem; }
@@ -430,21 +416,9 @@
   <div class="hero-badge">♦ &nbsp; Wedding Invitation &nbsp; ♦</div>
 
   <div class="couple-names" aria-label="Nivetha and Shiva">
-    Nivetha
+    Shiva kumar
     <span class="amp">&amp;</span>
-    Shiva
-  </div>
-
-  <div class="couple-details">
-    <div class="person">
-      <div class="pname">Nivetha</div>
-      <div class="pcred">MBBS</div>
-    </div>
-    <div class="div-amp">✦</div>
-    <div class="person">
-      <div class="pname">Shiva</div>
-      <div class="pcred">B.E.</div>
-    </div>
+    Nivetha
   </div>
 
   <div class="invite-box">
@@ -514,7 +488,7 @@
   <div class="venue-card">
     <div class="vc tl"></div><div class="vc tr"></div>
     <div class="vc bl"></div><div class="vc br"></div>
-    <span class="venue-icon-big">🏛️</span>
+    <img src="venue.png" class="venue-svg" alt="Wedding venue illustration" loading="lazy"/>
     <p class="venue-intro">The celebration will take place at:</p>
     <h3 class="venue-name">Vegupatti Visalakshi<br>Tirumana Mandapam</h3>
     <p class="venue-date">25 · May · 2026</p>
@@ -536,8 +510,8 @@
     <div class="tl-item">
       <div class="tl-card">
         <div class="ev-time">24 May · Prior Evening</div>
-        <div class="ev-title">Ponnazhaipu</div>
-        <div class="ev-desc">The beloved bride is ceremonially escorted from her ancestral home to the mandapam — accompanied by nadaswaram, family, and the joyful blessings of all who gather to send her forth.</div>
+        <div class="ev-title">Nalangu</div>
+        <div class="ev-desc">A joyful pre-wedding celebration filled with music, laughter and colour — the bride adorned with turmeric and oil, surrounded by family and friends ushering in the auspicious day ahead.</div>
       </div>
       <div class="tl-dot"></div>
       <div class="tl-empty"></div>
@@ -565,37 +539,12 @@
   </div>
 </section>
 
-<!-- ══ DRESS CODE ══ -->
-<section id="dress-code">
-  <h2>Dress <em>Code</em></h2>
-  <p class="sub">✦ &nbsp; Come as elegantly as the occasion &nbsp; ✦</p>
-
-  <div class="dress-row">
-    <div class="dress-item">
-      <span class="dress-icon">👗</span>
-      <div class="dress-lbl">Ladies</div>
-      <div class="dress-note">Saree, Salwar Kameez or any elegant ethnic wear</div>
-    </div>
-    <div class="dress-item">
-      <span class="dress-icon">🥻</span>
-      <div class="dress-lbl">Gentlemen</div>
-      <div class="dress-note">Dhoti & Shirt, Kurta or formal Indian wear</div>
-    </div>
-  </div>
-
-  <p class="dress-note-main">Embrace the beauty of traditional Indian elegance. Any formal or ethnic attire is welcomed and cherished.</p>
-</section>
-
 <!-- ══ GIFTS ══ -->
 <section id="gifts">
   <h2>Blessings <em>&amp; Gifts</em></h2>
   <p class="sub">✦ &nbsp; Your love is our greatest treasure &nbsp; ✦</p>
 
   <div class="gift-icons">🌸<span>💐</span>🎁</div>
-
-  <p class="gift-text">Your presence and blessings are the greatest gifts we could ever ask for. If you wish to honour us with something more, we are grateful for any contribution towards our new home and life together.</p>
-  <p class="gift-text" style="margin-top:1.2rem;">Cash gifts and envelopes are warmly welcomed. Every heartfelt gesture to help us build our future will be treasured forever.</p>
-</section>
 
 <!-- ══ TRAVEL ══ -->
 <section id="travel">
@@ -741,8 +690,8 @@ function initScratch(i) {
   }
 
   // Label — font size proportional to circle
-  ctx.fillStyle = '#4A2500';
-  const fontSize = Math.max(9, Math.round(W * 0.088));
+  ctx.fillStyle = '#FFFFFF';
+  const fontSize = Math.max(15, Math.round(W * 0.088));
   ctx.font = `bold ${fontSize}px Lato, sans-serif`;
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText('✦ Scratch Me ✦', cx, cy);
